@@ -32,8 +32,8 @@ function init() {
   camera.position.set(200, 200, 200);
   camera.lookAt(origin);
 
-  geometry = new THREE.BoxGeometry(50, 50, 50);
-  material = new THREE.MeshLambertMaterial({ color: 0x888888 });
+  geometry = new THREE.BoxGeometry(25, 25, 25);
+  material = new THREE.MeshNormalMaterial();
 
   mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
@@ -41,8 +41,8 @@ function init() {
   ambientLight = new THREE.AmbientLight(0x444444);
   scene.add(ambientLight);
 
-  pointLight = new THREE.PointLight(0xffffff, 1, 1000);
-  pointLight.position.set(50, 50, 50);
+  pointLight = new THREE.PointLight(0x0000ff, 1, 1000);
+  pointLight.position.set(100, 100, 100);
   scene.add(pointLight);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -55,11 +55,16 @@ function init() {
   document.body.appendChild(renderer.domElement);
 }
 
-function animate() {
-  requestAnimationFrame(animate);
+let angle = 0;
 
-  mesh.rotation.x += 0.9;
-  mesh.rotation.y += 0.9;
+function animate() {
+  angle += 0.01
+  requestAnimationFrame(animate);
+  const y = Math.sin(angle) * 20;
+  // console.log(y);
+  mesh.position.set(0, y, 0);
+
+
 
   controls.update();
 
