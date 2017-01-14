@@ -1,81 +1,86 @@
+import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const rootDir = path.resolve(__dirname, '..');
 
-function createScripts(appConfig) {
-  const scripts = [];
-  scripts.push(`../../lib/three/${appConfig.threeVersion}/three.min.js`);
-  scripts.push(`../../lib/three/${appConfig.threeVersion}/controls/OrbitControls.js`);
-  scripts.push('../../lib/threex/THREEx.WindowResize.js');
-  scripts.push('../../lib/input/KeyboardState.js');
-  return scripts;
-}
-
-function transformIndexApp(app, config) {
-  const scripts = createScripts(config);
+function transformIndexExperiment(experiment, config) {
+  const scripts = config.scripts || [];
+  const styles = config.styles || [];
   return (content) => {
     const template = _.template(content);
     return template({
       ...config,
-      app,
+      experiment,
       scripts,
+      styles,
     });
   };
 }
 
-function transformIndexApps(appConfigs) {
+function transformIndexExperiments(experimentConfigs) {
   return (content) => {
     const template = _.template(content);
-    return template({ apps: appConfigs });
+    return template({ experiments: experimentConfigs });
   };
 }
 
-export default function (apps, buildType) {
+export default function (experiments, buildType) {
   const entry = {};
   const plugins = [];
-  const appConfigs = [];
-  apps.forEach((app) => {
-    const appPath = path.join(rootDir, `src/apps/${app}`);
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    const appConfig = require(`${appPath}/config.js`).default;
-    if (appConfig.public || buildType === 'serve') {
-      appConfig.id = app;
-      appConfigs.push(appConfig);
+  const experimentConfigs = [];
+  experiments.forEach((experiment) => {
+    const experimentPath = path.join(rootDir, `src/experiments/${experiment}`);
+    // Ensure we have a directory
+    if (!fs.lstatSync(experimentPath).isDirectory()) {
+      return;
     }
-    entry[app] = appPath;
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    const experimentConfig = require(`${experimentPath}/config.js`).default;
+    if (experimentConfig.public || buildType === 'serve') {
+      experimentConfig.id = experiment;
+      experimentConfigs.push(experimentConfig);
+    }
+    entry[experiment] = experimentPath;
     const plugin = new CopyWebpackPlugin([
       {
-        from: path.join(rootDir, 'src/index-app.html'),
-        to: path.join(rootDir, `dist/apps/${app}/index.html`),
-        transform: transformIndexApp(app, appConfig),
+        from: path.join(rootDir, 'src/index-experiment.html'),
+        to: path.join(rootDir, `dist/experiments/${experiment}/index.html`),
+        transform: transformIndexExperiment(experiment, experimentConfig),
       },
     ]);
     plugins.push(plugin);
   });
-  // Copy the libs
+
+  // Copy the static files
   plugins.push(new CopyWebpackPlugin([
     {
-      from: path.join(rootDir, 'src/lib'),
-      to: path.join(rootDir, 'dist/lib'),
+      from: path.join(rootDir, 'src/assets'),
+      to: path.join(rootDir, 'dist/assets'),
     },
-  ]));
-  // Create the main index file
-  plugins.push(new CopyWebpackPlugin([
     {
-      from: path.join(rootDir, 'src/index-apps.html'),
+      from: path.join(rootDir, 'src/libs'),
+      to: path.join(rootDir, 'dist/libs'),
+    },
+    {
+      from: path.join(rootDir, 'src/modules'),
+      to: path.join(rootDir, 'dist/modules'),
+    },
+    {
+      from: path.join(rootDir, 'src/index-experiments.html'),
       to: path.join(rootDir, 'index.html'),
-      transform: transformIndexApps(appConfigs),
+      transform: transformIndexExperiments(experimentConfigs),
     },
   ]));
+
   return {
     entry,
     plugins,
     debug: false,
     output: {
       path: rootDir,
-      filename: 'dist/apps/[name]/bundle.js',
+      filename: 'dist/experiments/[name]/bundle.js',
     },
     resolve: {
       root: [
