@@ -11,8 +11,13 @@ let renderer;
 let axisHelper;
 let gridHelper;
 let geometry;
+let geometry2;
 let material;
+let material2;
 let mesh;
+let mesh2;
+let mesh3;
+let mesh4;
 let controls;
 let pointLight;
 let ambientLight;
@@ -29,20 +34,31 @@ function init() {
   scene.add(axisHelper);
 
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-  camera.position.set(200, 200, 200);
+  camera.position.set(0, 50, 200);
   camera.lookAt(origin);
 
-  geometry = new THREE.BoxGeometry(50, 50, 50);
-  material = new THREE.MeshLambertMaterial({ color: 0x888888 });
+  geometry = new THREE.BoxGeometry(25, 25, 25);
+  geometry2 = new THREE.BoxGeometry(12.5, 12.5, 12.5)
+  material = new THREE.MeshNormalMaterial();
+  material2 = new THREE.MeshStandardMaterial();
 
   mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
+  mesh2 = new THREE.Mesh(geometry, material);
+  scene.add(mesh2);
+
+  mesh3 = new THREE.Mesh(geometry, material);
+  scene.add(mesh3);
+
+  mesh4 = new THREE.Mesh(geometry2, material2);
+  scene.add(mesh4);
+
   ambientLight = new THREE.AmbientLight(0x444444);
   scene.add(ambientLight);
 
-  pointLight = new THREE.PointLight(0xffffff, 1, 1000);
-  pointLight.position.set(50, 50, 50);
+  pointLight = new THREE.PointLight(0x0000ff, 1, 1000);
+  pointLight.position.set(100, 100, 100);
   scene.add(pointLight);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -55,17 +71,29 @@ function init() {
   document.body.appendChild(renderer.domElement);
 }
 
+let angle = 0;
+
 function update() {
-  mesh.rotation.x += 0.9;
-  mesh.rotation.y += 0.9;
+  angle += 0.01
+  const cos = Math.cos(angle) * 25;
+  mesh.position.set(-50, cos, 0);
   controls.update();
+
+  const sin = Math.sin(angle) * 25;
+  mesh2.position.set(sin, 50, 0);
+
+  mesh3.position.set(sin, cos, 0);
+
+  const tan = Math.tan(angle) * 75;
+  mesh4.position.set(sin, cos, tan);
+//  console.log(tan);
 }
 
 function render() {
   renderer.render(scene, camera);
-}
+};
 
-function tick() {
+function tick () {
   update();
   render();
   requestAnimationFrame(tick);
