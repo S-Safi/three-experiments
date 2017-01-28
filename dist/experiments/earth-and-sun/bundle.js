@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	var SCREEN_WIDTH = window.innerWidth;
 	var SCREEN_HEIGHT = window.innerHeight;
@@ -56,22 +56,13 @@
 	var scene = void 0;
 	var camera = void 0;
 	var renderer = void 0;
-	var axisHelper = void 0;
-	var gridHelper = void 0;
-	var geometry = void 0;
-	var geometry2 = void 0;
-	var geometry3 = void 0;
-	var geometry4 = void 0;
-	var material = void 0;
-	var material2 = void 0;
-	var material3 = void 0;
-	var material4 = void 0;
-	var mesh = void 0;
-	var mesh2 = void 0;
-	var mesh3 = void 0;
-	var mesh4 = void 0;
+	var sunGeometry = void 0;
+	var earthGeometry = void 0;
+	var sunMaterial = void 0;
+	var earthMaterial = void 0;
+	var sun = void 0;
+	var earth = void 0;
 	var controls = void 0;
-	var pointLight = void 0;
 	var ambientLight = void 0;
 
 	var origin = new THREE.Vector3(0, 0, 0);
@@ -79,34 +70,23 @@
 	function init() {
 	  scene = new THREE.Scene();
 
-	  gridHelper = new THREE.GridHelper(100, 10);
-	  scene.add(gridHelper);
-
-	  axisHelper = new THREE.AxisHelper(100);
-	  scene.add(axisHelper);
-
 	  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-	  camera.position.set(200, 200, 200);
+	  camera.position.set(300, 300, 300);
 	  camera.lookAt(origin);
 
-	  geometry = new THREE.SphereGeometry(25, 25, 25);
-	  geometry2 = new THREE.SphereGeometry(25, 25, 25);
-	  material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-	  material2 = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+	  sunGeometry = new THREE.SphereBufferGeometry(100, 32, 32);
+	  earthGeometry = new THREE.SphereBufferGeometry(25, 16, 16);
+	  sunMaterial = new THREE.MeshLambertMaterial();
+	  earthMaterial = new THREE.MeshLambertMaterial();
 
-	  mesh = new THREE.Mesh(geometry, material);
-	  scene.add(mesh);
+	  sun = new THREE.Mesh(sunGeometry, sunMaterial);
+	  scene.add(sun);
 
-	  mesh2 = new THREE.Mesh(geometry2, material2);
-	  scene.add(mesh2);
+	  earth = new THREE.Mesh(earthGeometry, earthMaterial);
+	  scene.add(earth);
 
 	  ambientLight = new THREE.AmbientLight(0xffffff);
-	  ambientLight.position.set(0, 300, 0);
 	  scene.add(ambientLight);
-
-	  pointLight = new THREE.PointLight(0x0000ff, 1, 1000);
-	  pointLight.position.set(100, 100, 100);
-	  scene.add(pointLight);
 
 	  renderer = new THREE.WebGLRenderer({ antialias: true });
 	  renderer.setSize(window.innerWidth, window.innerHeight);
@@ -116,19 +96,43 @@
 	  THREEx.WindowResize(renderer, camera);
 
 	  document.body.appendChild(renderer.domElement);
+
+	  var loader = new THREE.TextureLoader();
+
+	  // load a resource
+	  loader.load(
+	  // resource URL
+	  '../../assets/textures/planets/earth.jpg',
+	  // Function when resource is loaded
+	  function (texture) {
+	    console.log(texture);
+	    earthMaterial.map = texture;
+	    earthMaterial.needsUpdate = true;
+	  });
+
+	  // load a resource
+	  loader.load(
+	  // resource URL
+	  '../../assets/textures/planets/sun.jpg',
+	  // Function when resource is loaded
+	  function (texture) {
+	    console.log(texture);
+	    sunMaterial.map = texture;
+	    sunMaterial.needsUpdate = true;
+	  });
 	}
 
 	var angle = 0;
 
 	function update() {
-	  var y = Math.sin(angle) * 150;
-	  var y2 = Math.cos(angle) * 150;
+	  var y = Math.sin(angle) * 300;
+	  var y2 = Math.cos(angle) * 300;
 
 	  angle += 0.01;
-	  mesh.position.set(0, 0, 0);
+	  sun.position.set(0, 0, 0);
 
 	  angle += 0.01;
-	  mesh2.position.set(-y, 0, y2);
+	  earth.position.set(-y, 0, y2);
 
 	  controls.update();
 	}

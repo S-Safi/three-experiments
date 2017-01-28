@@ -8,22 +8,13 @@ const FAR = 10000;
 let scene;
 let camera;
 let renderer;
-let axisHelper;
-let gridHelper;
-let geometry;
-let geometry2;
-let geometry3;
-let geometry4;
-let material;
-let material2;
-let material3;
-let material4;
-let mesh;
-let mesh2;
-let mesh3;
-let mesh4;
+let sunGeometry;
+let earthGeometry;
+let sunMaterial;
+let earthMaterial;
+let sun;
+let earth;
 let controls;
-let pointLight;
 let ambientLight;
 
 const origin = new THREE.Vector3(0, 0, 0);
@@ -31,34 +22,23 @@ const origin = new THREE.Vector3(0, 0, 0);
 function init() {
   scene = new THREE.Scene();
 
-  gridHelper = new THREE.GridHelper(100, 10);
-  scene.add(gridHelper);
-
-  axisHelper = new THREE.AxisHelper(100);
-  scene.add(axisHelper);
-
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-  camera.position.set(200, 200, 200);
+  camera.position.set(300, 300, 300);
   camera.lookAt(origin);
 
-  geometry = new THREE.SphereGeometry(25, 25, 25);
-  geometry2 = new THREE.SphereGeometry(25, 25, 25);
-  material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-  material2 = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+  sunGeometry = new THREE.SphereBufferGeometry(100, 32, 32);
+  earthGeometry = new THREE.SphereBufferGeometry(25, 16, 16);
+  sunMaterial = new THREE.MeshLambertMaterial();
+  earthMaterial = new THREE.MeshLambertMaterial();
 
-  mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  sun = new THREE.Mesh(sunGeometry, sunMaterial);
+  scene.add(sun);
 
-  mesh2 = new THREE.Mesh(geometry2, material2);
-  scene.add(mesh2);
+  earth = new THREE.Mesh(earthGeometry, earthMaterial);
+  scene.add(earth);
 
   ambientLight = new THREE.AmbientLight(0xffffff);
-  ambientLight.position.set(0, 300, 0);
   scene.add(ambientLight);
-
-  pointLight = new THREE.PointLight(0x0000ff, 1, 1000);
-  pointLight.position.set(100, 100, 100);
-  scene.add(pointLight);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -68,19 +48,45 @@ function init() {
   THREEx.WindowResize(renderer, camera);
 
   document.body.appendChild(renderer.domElement);
+
+  const loader = new THREE.TextureLoader();
+
+  // load a resource
+  loader.load(
+    // resource URL
+    '../../assets/textures/planets/earth.jpg',
+    // Function when resource is loaded
+    (texture) => {
+      console.log(texture);
+      earthMaterial.map = texture;
+      earthMaterial.needsUpdate = true;
+    },
+  );
+
+  // load a resource
+  loader.load(
+    // resource URL
+    '../../assets/textures/planets/sun.jpg',
+    // Function when resource is loaded
+    (texture) => {
+      console.log(texture);
+      sunMaterial.map = texture;
+      sunMaterial.needsUpdate = true;
+    },
+  );
 }
 
 let angle = 0;
 
 function update() {
-  const y = Math.sin(angle) * 150;
-  const y2 = Math.cos(angle) * 150;
+  const y = Math.sin(angle) * 300;
+  const y2 = Math.cos(angle) * 300;
 
-  angle += 0.01
-  mesh.position.set(0, 0, 0);
+  angle += 0.01;
+  sun.position.set(0, 0, 0);
 
-  angle += 0.01
-  mesh2.position.set(-y, 0, y2);
+  angle += 0.01;
+  earth.position.set(-y, 0, y2);
 
   controls.update();
 }
