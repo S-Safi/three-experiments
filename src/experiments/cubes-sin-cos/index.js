@@ -85,7 +85,7 @@ function update() {
   mesh3.position.set(sin, cos, 0);
 
   const tan = Math.tan(angle) * 75;
-  mesh4.position.set(sin, cos, tan);
+  mesh4.position.set(sin, cos, sin);
 //  console.log(tan);
 }
 
