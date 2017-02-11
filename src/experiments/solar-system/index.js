@@ -72,6 +72,13 @@ let jupiterAngle = 0;
 let jupiterX = 0;
 let jupiterY = 0;
 
+const saturnOrbitRadius = 900;
+const saturnRadius = 80;
+const saturnSpeed = (Math.PI * 2) / (360 * 7);
+let saturnAngle = 0;
+let saturnX = 0;
+let saturnY = 0;
+
 
 const origin = new THREE.Vector3(0, 0, 0);
 
@@ -89,7 +96,7 @@ function init() {
   earthGeometry = new THREE.SphereBufferGeometry(earthRadius, 16, 16);
   marsGeometry = new THREE.SphereBufferGeometry(marsRadius, 16, 16);
   jupiterGeometry = new THREE.SphereBufferGeometry(jupiterRadius, 16, 16);
-  saturnGeometry = new THREE.SphereBufferGeometry(80, 16, 16);
+  saturnGeometry = new THREE.SphereBufferGeometry(saturnRadius, 16, 16);
   uranusGeometry = new THREE.SphereBufferGeometry(70, 16, 16);
   neptuneGeometry = new THREE.SphereBufferGeometry(60, 16, 16);
   sunMaterial = new THREE.MeshLambertMaterial();
@@ -117,9 +124,9 @@ function init() {
 
   jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
   scene.add(jupiter);
-  //
-  // saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
-  // scene.add(saturn);
+
+  saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
+  scene.add(saturn);
   //
   // uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
   // scene.add(uranus);
@@ -204,9 +211,10 @@ function update() {
   jupiterAngle += jupiterSpeed;
   jupiter.position.set(jupiterX, jupiterY, 0);
 
-  //
-  // angle += 0.01;
-  // saturn.position.set(-y5, 0, y7);
+  saturnX = saturnOrbitRadius * Math.cos(saturnAngle);
+  saturnY = saturnOrbitRadius * Math.sin(saturnAngle);
+  saturnAngle += saturnSpeed;
+  saturn.position.set(saturnX, saturnY, 0);
   //
   // angle += 0.01;
   // uranus.position.set(-y6, 0, y8);

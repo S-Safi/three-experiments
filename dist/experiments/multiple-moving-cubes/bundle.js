@@ -144,7 +144,7 @@
 
 	  angle += 0.01;
 	  var y4 = Math.sin(angle) * 40;
-	  mesh4.position.set(-y4, y4, -y4);
+	  mesh4.position.set(-y4, y3, -y2);
 
 	  controls.update();
 	}
