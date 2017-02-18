@@ -5,6 +5,8 @@ class Planet extends THREE.Object3D {
   constructor(props) {
     super();
     this.props = props;
+
+    // create planet
     const geometry = new THREE.SphereBufferGeometry(props.radius, 16, 16);
     const material = new THREE.MeshStandardMaterial({ color: props.color });
     const mesh = new THREE.Mesh(geometry, material);
@@ -21,6 +23,15 @@ class Planet extends THREE.Object3D {
         },
       );
     }
+
+    // create orbit path
+    const orbitGeometry = new THREE.CircleGeometry(props.orbitRadius, 64);
+    orbitGeometry.vertices.shift();
+    // removes the line from the center of the circle to the edge of the circle
+    const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+    const orbitMesh = new THREE.Line(orbitGeometry, orbitMaterial);
+    this.orbitMesh = orbitMesh;
+    this.add(orbitMesh);
   }
 
   update() {
@@ -28,6 +39,7 @@ class Planet extends THREE.Object3D {
     const y = this.props.orbitRadius * Math.sin(this.props.angle);
     this.props.angle += this.props.speed;
     this.position.set(x, y, 0);
+    this.orbitMesh.position.set(-x, -y, 0)
   }
 }
 

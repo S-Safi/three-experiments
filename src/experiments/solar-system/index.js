@@ -13,14 +13,6 @@ let renderer;
 let sunGeometry;
 let sunMaterial;
 let sun;
-let mercury;
-let venus;
-let earth;
-let mars;
-let jupiter;
-let saturn;
-let uranus;
-let neptune;
 let controls;
 let ambientLight;
 
@@ -67,6 +59,15 @@ planetProps.push({
   angle: randomAngle(),
   // color: 0x0000ff,
   texture: '../../assets/textures/planets/earth.jpg',
+});
+
+planetProps.push({
+  name: 'mars',
+  orbitRadius: 600,
+  radius: 30,
+  speed: (Math.PI * 2) / (360 * 5),
+  angle: randomAngle(),
+  color: 0xff0000,
 });
 
 const origin = new THREE.Vector3(0, 0, 0);
