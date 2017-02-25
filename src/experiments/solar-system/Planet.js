@@ -30,16 +30,17 @@ class Planet extends THREE.Object3D {
     // removes the line from the center of the circle to the edge of the circle
     const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
     const orbitMesh = new THREE.Line(orbitGeometry, orbitMaterial);
+    orbitMesh.rotation.x = Math.PI / 2;
     this.orbitMesh = orbitMesh;
     this.add(orbitMesh);
   }
 
   update() {
     const x = this.props.orbitRadius * Math.cos(this.props.angle);
-    const y = this.props.orbitRadius * Math.sin(this.props.angle);
+    const z = this.props.orbitRadius * Math.sin(this.props.angle);
     this.props.angle += this.props.speed;
-    this.position.set(x, y, 0);
-    this.orbitMesh.position.set(-x, -y, 0)
+    this.position.set(x, 0, z);
+    this.orbitMesh.position.set(-x, 0, -z);
   }
 }
 
