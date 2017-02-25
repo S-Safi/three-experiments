@@ -65,14 +65,6 @@
 	var sunGeometry = void 0;
 	var sunMaterial = void 0;
 	var sun = void 0;
-	var mercury = void 0;
-	var venus = void 0;
-	var earth = void 0;
-	var mars = void 0;
-	var jupiter = void 0;
-	var saturn = void 0;
-	var uranus = void 0;
-	var neptune = void 0;
 	var controls = void 0;
 	var ambientLight = void 0;
 
@@ -119,6 +111,15 @@
 	  angle: randomAngle(),
 	  // color: 0x0000ff,
 	  texture: '../../assets/textures/planets/earth.jpg'
+	});
+
+	planetProps.push({
+	  name: 'mars',
+	  orbitRadius: 600,
+	  radius: 30,
+	  speed: Math.PI * 2 / (360 * 5),
+	  angle: randomAngle(),
+	  color: 0xff0000
 	});
 
 	var origin = new THREE.Vector3(0, 0, 0);
@@ -232,6 +233,8 @@
 	    var _this = _possibleConstructorReturn(this, (Planet.__proto__ || Object.getPrototypeOf(Planet)).call(this));
 
 	    _this.props = props;
+
+	    // create planet
 	    var geometry = new THREE.SphereBufferGeometry(props.radius, 16, 16);
 	    var material = new THREE.MeshStandardMaterial({ color: props.color });
 	    var mesh = new THREE.Mesh(geometry, material);
@@ -247,6 +250,15 @@
 	        material.needsUpdate = true;
 	      });
 	    }
+
+	    // create orbit path
+	    var orbitGeometry = new THREE.CircleGeometry(props.orbitRadius, 64);
+	    orbitGeometry.vertices.shift();
+	    // removes the line from the center of the circle to the edge of the circle
+	    var orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+	    var orbitMesh = new THREE.Line(orbitGeometry, orbitMaterial);
+	    _this.orbitMesh = orbitMesh;
+	    _this.add(orbitMesh);
 	    return _this;
 	  }
 
@@ -257,6 +269,7 @@
 	      var y = this.props.orbitRadius * Math.sin(this.props.angle);
 	      this.props.angle += this.props.speed;
 	      this.position.set(x, y, 0);
+	      this.orbitMesh.position.set(-x, -y, 0);
 	    }
 	  }]);
 
