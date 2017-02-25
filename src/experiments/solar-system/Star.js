@@ -2,9 +2,12 @@
 const loader = new THREE.TextureLoader();
 
 class Star extends THREE.Object3D {
+
   constructor(props) {
     super();
     this.props = props;
+
+    this.planets = [];
 
     const geometry = new THREE.SphereBufferGeometry(props.radius, 32, 32);
     const material = new THREE.MeshStandardMaterial({ color: props.color });
@@ -32,6 +35,10 @@ class Star extends THREE.Object3D {
     // orbitMesh.rotation.x = Math.PI / 2;
     // this.orbitMesh = orbitMesh;
     // this.add(orbitMesh);
+  }
+
+  addPlanet(planet) {
+    this.planets.push(planet);
   }
 
 }

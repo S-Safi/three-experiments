@@ -18,20 +18,15 @@ let ambientLight;
 
 const planets = [];
 
-const origin = new THREE.Vector3(0, 0, 0);
-
 function init() {
   scene = new THREE.Scene();
 
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-  camera.position.set(0, 0, 3000);
-  camera.lookAt(origin);
-
-  const axisHelper = new THREE.AxisHelper(500);
-  scene.add(axisHelper);
+  camera.position.set(0, 1000, 1200);
 
   sun = new Star({
     radius: 100,
+    color: 0xffffff,
     texture: '../../assets/textures/planets/sun.jpg',
   });
 
