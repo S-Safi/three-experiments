@@ -1,6 +1,8 @@
-import Electron from './Electron';
-import Proton from './Proton';
-import Neutron from './Neutron';
+// import Electron from './Electron';
+// import Proton from './Proton';
+// import Neutron from './Neutron';
+import Nucleus from './Nucleus';
+import Atom from './Atom';
 
 
 const SCREEN_WIDTH = window.innerWidth;
@@ -13,9 +15,11 @@ const FAR = 10000;
 let scene;
 let camera;
 let renderer;
-let proton;
-let neutron;
-let electron;
+// let proton;
+// let neutron;
+let nucleus;
+// let electron;
+let atom;
 let controls;
 let ambientLight;
 
@@ -28,14 +32,14 @@ function init() {
   camera.position.set(300, 300, 300);
   camera.lookAt(origin);
 
-  proton = new Proton();
-  scene.add(proton);
+  nucleus = new Nucleus(6, 6);
+  scene.add(nucleus);
 
-  neutron = new Neutron();
-  scene.add(neutron);
+  // neutron = new Neutron();
+  // scene.add(neutron);
 
-  electron = new Electron();
-  scene.add(electron);
+  atom = new Atom(nucleus, 6);
+  scene.add(atom);
 
   ambientLight = new THREE.AmbientLight(0xffffff);
   scene.add(ambientLight);
@@ -53,18 +57,21 @@ function init() {
 let angle = 0;
 
 function update() {
-  const y = Math.sin(angle) * 300;
-  const y2 = Math.cos(angle) * 300;
+  // const y = Math.sin(angle) * 300;
+  // const y2 = Math.cos(angle) * 300;
+
+  // angle += 0.01;
+  // proton.position.set(0, 0, 0);
+  //
+  // angle += 0.01;
+  // neutron.position.set(30, 0, 0);
+
+  // angle += 0.01;
+  // electron.position.set(-y, 0, y2);
 
   angle += 0.01;
-  proton.position.set(0, 0, 0);
 
-  angle += 0.01;
-  neutron.position.set(30, 0, 0);
-
-  angle += 0.01;
-  electron.position.set(-y, 0, y2);
-
+  atom.update(angle);
   controls.update();
 }
 
