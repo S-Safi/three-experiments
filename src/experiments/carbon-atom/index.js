@@ -1,9 +1,9 @@
-// import Electron from './Electron';
+import Electron from './Electron';
 import Proton from './Proton';
-// import Neutron from './Neutron';
+import Neutron from './Neutron';
+import Shell from './Shell';
 // import Nucleus from './Nucleus';
 // import Atom from './Atom';
-
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -16,14 +16,16 @@ let scene;
 let camera;
 let renderer;
 let proton;
-// let neutron;
+let neutron;
 // let nucleus;
 // let electron;
-let atom;
+// let atom;
 let controls;
 let ambientLight;
 
 const origin = new THREE.Vector3(0, 0, 0);
+const electron1 = new Electron(1);
+const electron2 = new Electron(1);
 
 function init() {
   scene = new THREE.Scene();
@@ -36,11 +38,21 @@ function init() {
   scene.add(proton);
   proton.position.set(0, 0, 0);
 
-  // neutron = new Neutron();
-  // scene.add(neutron);
+  neutron = new Neutron(1);
+  scene.add(neutron);
+  neutron.position.set(60, 0, 0);
 
-  // atom = new Atom(nucleus, 6);
-  // scene.add(atom);
+  scene.add(electron1);
+
+  scene.add(electron2);
+
+  const shell1 = new Shell({ radius: 50 });
+  scene.add(shell1);
+  shell1.rotation.x = Math.PI / 2;
+
+  const shell2 = new Shell({ radius: 100 });
+  scene.add(shell2);
+  shell2.rotation.x = Math.PI / 2;
 
   ambientLight = new THREE.AmbientLight(0xffffff);
   scene.add(ambientLight);
@@ -58,8 +70,11 @@ function init() {
 let angle = 0;
 
 function update() {
-  // const y = Math.sin(angle) * 300;
-  // const y2 = Math.cos(angle) * 300;
+  const e11 = Math.sin(angle) * 50;
+  const e12 = Math.cos(angle) * 50;
+
+  const e21 = Math.sin(angle) * 100;
+  const e22 = Math.cos(angle) * 100;
 
   // angle += 0.01;
   // proton.position.set(0, 0, 0);
@@ -67,12 +82,15 @@ function update() {
   // angle += 0.01;
   // neutron.position.set(30, 0, 0);
 
-  // angle += 0.01;
-  // electron.position.set(-y, 0, y2);
+  angle += 0.01;
+  electron1.position.set(-e11, 0, e12);
 
   angle += 0.01;
+  electron2.position.set(e11, 0, e12);
 
-  atom.update(angle);
+  // angle += 0.01;
+
+  // atom.update(angle);
   controls.update();
 }
 
