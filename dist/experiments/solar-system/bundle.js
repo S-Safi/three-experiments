@@ -46,15 +46,15 @@
 
 	'use strict';
 
-	var _Planet = __webpack_require__(1);
+	var _Planet = __webpack_require__(10);
 
 	var _Planet2 = _interopRequireDefault(_Planet);
 
-	var _Star = __webpack_require__(2);
+	var _Star = __webpack_require__(11);
 
 	var _Star2 = _interopRequireDefault(_Star);
 
-	var _entities = __webpack_require__(3);
+	var _entities = __webpack_require__(12);
 
 	var _entities2 = _interopRequireDefault(_entities);
 
@@ -131,7 +131,16 @@
 	tick();
 
 /***/ },
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -206,7 +215,7 @@
 	exports.default = Planet;
 
 /***/ },
-/* 2 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -278,7 +287,7 @@
 	exports.default = Star;
 
 /***/ },
-/* 3 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
