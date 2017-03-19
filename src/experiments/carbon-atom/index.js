@@ -38,6 +38,8 @@ const neutron1 = new Neutron(1);
 const neutron2 = new Neutron(1);
 const neutron3 = new Neutron(1);
 const neutron4 = new Neutron(1);
+const neutron5 = new Neutron(1);
+const neutron6 = new Neutron(1);
 
 const origin = new THREE.Vector3(0, 0, 0);
 const electron1 = new Electron(1);
@@ -74,7 +76,7 @@ function init() {
   proton4.position.set(60, 0, 60);
 
   scene.add(proton5);
-  proton5.position.set(60, 0, 60);
+  proton5.position.set(-20, -30, 20);
 
   scene.add(proton6);
   proton6.position.set(20, 30, 20);
@@ -90,6 +92,12 @@ function init() {
 
   scene.add(neutron4);
   neutron4.position.set(-60, 0, 0);
+
+  scene.add(neutron5);
+  neutron5.position.set(20, -30, -20);
+
+  scene.add(neutron6);
+  neutron6.position.set(-20, 30, -20);
 
   scene.add(electron1);
   scene.add(electron2);
