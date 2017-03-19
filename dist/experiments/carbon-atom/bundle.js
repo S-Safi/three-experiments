@@ -100,6 +100,8 @@
 	var neutron2 = new _Neutron2.default(1);
 	var neutron3 = new _Neutron2.default(1);
 	var neutron4 = new _Neutron2.default(1);
+	var neutron5 = new _Neutron2.default(1);
+	var neutron6 = new _Neutron2.default(1);
 
 	var origin = new THREE.Vector3(0, 0, 0);
 	var electron1 = new _Electron2.default(1);
@@ -136,7 +138,7 @@
 	  proton4.position.set(60, 0, 60);
 
 	  scene.add(proton5);
-	  proton5.position.set(60, 0, 60);
+	  proton5.position.set(-20, -30, 20);
 
 	  scene.add(proton6);
 	  proton6.position.set(20, 30, 20);
@@ -152,6 +154,12 @@
 
 	  scene.add(neutron4);
 	  neutron4.position.set(-60, 0, 0);
+
+	  scene.add(neutron5);
+	  neutron5.position.set(20, -30, -20);
+
+	  scene.add(neutron6);
+	  neutron6.position.set(-20, 30, -20);
 
 	  scene.add(electron1);
 	  scene.add(electron2);
