@@ -7,7 +7,7 @@ class Planet extends THREE.Object3D {
     this.props = props;
 
     // create planet
-    const geometry = new THREE.SphereBufferGeometry(props.radius, 16, 16);
+    const geometry = new THREE.SphereBufferGeometry(props.radius, props.radius, props.radius);
     const material = new THREE.MeshStandardMaterial({ color: props.color });
     const mesh = new THREE.Mesh(geometry, material);
     this.add(mesh);

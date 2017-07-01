@@ -165,7 +165,7 @@ function update() {
   const e6x = Math.sin(angle + Math.PI / 2 + Math.PI) * 300;
   const e6y = Math.cos(angle + Math.PI / 2 + Math.PI) * 300;
 
-  angle += 0.01;
+  angle += 10;
   // angle += 0.01;
   // proton.position.set(0, 0, 0);
   //

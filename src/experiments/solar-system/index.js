@@ -25,9 +25,9 @@ function init() {
   camera.position.set(0, 1000, 1200);
 
   sun = new Star({
-    radius: 100,
+    radius: 1300,
     color: 0xffffff,
-    texture: '../../assets/textures/planets/sun.jpg',
+    texture: '../../assets/textures/planets/download.jpg',
   });
 
   scene.add(sun);
@@ -55,6 +55,10 @@ function update() {
   planets.forEach((planet) => {
     planet.update();
   });
+
+  sun.rotation.y += 0.01;
+  // sun.rotation.x += 0.1;
+  // sun.rotation.z += 0.1;
 
   controls.update();
 }
