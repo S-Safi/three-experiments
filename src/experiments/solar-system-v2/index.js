@@ -1,6 +1,7 @@
-import Earth from './objects/earth';
+import Moon from './objects/moon';
 import Mercury from './objects/mercury';
 import Venus from './objects/venus';
+import Earth from './objects/earth';
 import Sol from './objects/sol';
 import SolarSystem from './objects/solar-system';
 
@@ -40,6 +41,8 @@ function init() {
   const mercury = new Mercury();
   const venus = new Venus();
   const earth = new Earth();
+  const moon = new Moon({ color: 0x888888, radius: 1737, orbitRadius: 384000, orbitPeriod: 27 });
+  earth.addMoon(moon);
 
   const sol = new Sol();
   sol.addPlanet(mercury);
