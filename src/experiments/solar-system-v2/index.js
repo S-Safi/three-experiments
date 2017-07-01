@@ -9,8 +9,8 @@ const SCREEN_HEIGHT = window.innerHeight;
 const VIEW_ANGLE = 45;
 const ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 const NEAR = 1;
-const FAR = 50000000;
-const SCALE = 0.01;
+const FAR = 5000000;
+const SCALE = 0.005;
 
 let prevTime = Date.now();
 let scene;
@@ -27,7 +27,7 @@ function init() {
   scene = new THREE.Scene();
 
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-  camera.position.set(20000, 20000, 20000);
+  camera.position.set(0, -20000, 10000);
   camera.lookAt(origin);
 
   // mesh = new THREE.Mesh(geometry, material);

@@ -1,3 +1,4 @@
+import Orbit from './orbit';
 import orbitRadiusScale from '../lib/orbit-radius-scale';
 import orbitPeriodScale from '../lib/orbit-period-scale';
 
@@ -28,6 +29,8 @@ export default class Star extends THREE.Object3D {
     };
     this.satellites.push(satellite);
     this.add(planet);
+    const orbit = new Orbit(orbitRadiusScale(planet.orbitRadius));
+    this.add(orbit);
   }
 
   update(delta) {
