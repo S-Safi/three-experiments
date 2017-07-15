@@ -3,7 +3,7 @@ export default class Orbit extends THREE.Object3D {
   constructor(radius) {
     super();
     // create orbit path
-    const geometry = new THREE.CircleGeometry(radius, 64);
+    const geometry = new THREE.CircleGeometry(radius, 1024);
     // removes the line from the center of the circle to the edge of the circle
     geometry.vertices.shift();
     // geometry.rotateX(Math.PI / 2);
