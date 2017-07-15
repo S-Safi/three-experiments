@@ -41,7 +41,11 @@ function init() {
   const mercury = new Mercury();
   const venus = new Venus();
   const earth = new Earth();
-  const moon = new Moon({ color: 0x888888, radius: 1737, orbitRadius: 384000, orbitPeriod: 27 });
+  const moon = new Moon(
+    { color: 0x888888,
+      radius: 1737,
+      orbitRadius: 384000,
+      orbitPeriod: 27 });
   earth.addMoon(moon);
 
   const sol = new Sol();

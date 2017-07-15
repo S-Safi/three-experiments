@@ -1,5 +1,6 @@
 import orbitPeriodScale from '../lib/orbit-period-scale';
 import orbitRadiusScale from '../lib/orbit-radius-scale';
+import Orbit from './orbit';
 
 function daysToseconds(days) {
   return days * 24 * 3600;
@@ -16,6 +17,7 @@ export default class Planet extends THREE.Object3D {
     const mesh = new THREE.Mesh(geometry, material);
     this.add(mesh);
 
+    this.radius = radius;
     this.orbitRadius = orbitRadius;
     this.orbitPeriod = orbitPeriod;
     this.satellites = [];
@@ -28,11 +30,12 @@ export default class Planet extends THREE.Object3D {
       y: 0,
       z: 0,
       angle: 0,
+      orbitRadius: moon.orbitRadius + this.radius + moon.radius,
     };
     this.satellites.push(satellite);
     this.add(moon);
-    // const orbit = new Orbit(orbitRadiusScale(moo.orbitRadius));
-    // this.add(orbit);
+    const orbit = new Orbit(orbitRadiusScale(satellite.orbitRadius));
+    this.add(orbit);
   }
 
   update(delta) {
@@ -42,8 +45,8 @@ export default class Planet extends THREE.Object3D {
       const deltaSeconds = delta / 1000;
       const angleDelta = orbitAnglePerSecond * deltaSeconds;
       satellite.angle += angleDelta;
-      satellite.x = orbitRadiusScale(satellite.moon.orbitRadius) * Math.cos(satellite.angle);
-      satellite.y = orbitRadiusScale(satellite.moon.orbitRadius) * Math.sin(satellite.angle);
+      satellite.x = orbitRadiusScale(satellite.orbitRadius) * Math.cos(satellite.angle);
+      satellite.y = orbitRadiusScale(satellite.orbitRadius) * Math.sin(satellite.angle);
       satellite.moon.position.set(satellite.x, satellite.y, satellite.z);
     });
   }

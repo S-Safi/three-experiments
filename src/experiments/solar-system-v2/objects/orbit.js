@@ -8,7 +8,7 @@ export default class Orbit extends THREE.Object3D {
     geometry.vertices.shift();
     // geometry.rotateX(Math.PI / 2);
     const material = new THREE.LineBasicMaterial({
-      color: 0x0000ff,
+      color: 0xffffff,
       transparent: true,
       opacity: 0.2,
     });
