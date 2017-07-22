@@ -9,7 +9,7 @@ class Star extends THREE.Object3D {
 
     this.planets = [];
 
-    const geometry = new THREE.SphereBufferGeometry(props.radius, props.radius, props.radius);
+    const geometry = new THREE.BoxBufferGeometry(props.radius, props.radius, props.radius);
     const material = new THREE.MeshStandardMaterial({ color: props.color });
     const mesh = new THREE.Mesh(geometry, material);
     this.add(mesh);

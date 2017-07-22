@@ -1,7 +1,13 @@
+import { ONE_MILLION } from './lib/constants';
 import Moon from './objects/moon';
 import Mercury from './objects/mercury';
 import Venus from './objects/venus';
 import Earth from './objects/earth';
+import Mars from './objects/mars';
+import Jupiter from './objects/jupiter';
+import Saturn from './objects/saturn';
+import Uranus from './objects/uranus';
+import Neptune from './objects/neptune';
 import Sol from './objects/sol';
 import SolarSystem from './objects/solar-system';
 
@@ -49,18 +55,46 @@ function init() {
       orbitRadius: 384000,
       orbitPeriod: 27 });
   earth.addMoon(moon);
+  const mars = new Mars();
+  const jupiter = new Jupiter();
+  const ganymede = new Moon(
+    { color: 0xffffff,
+      radius: 2631,
+      orbitRadius: 1.070 * ONE_MILLION,
+      orbitPeriod: 7 });
+  jupiter.addMoon(ganymede);
+  const callisto = new Moon(
+    { color: 0xffffff,
+      radius: 4821 / 2,
+      orbitRadius: 1.8827 * ONE_MILLION,
+      orbitPeriod: 17 });
+  jupiter.addMoon(callisto);
+  const io = new Moon(
+    { color: 0xffffff,
+      radius: 3660 / 2,
+      orbitRadius: 0.442 * ONE_MILLION,
+      orbitPeriod: 1.7691 });
+  jupiter.addMoon(io);
+  const saturn = new Saturn();
+  const uranus = new Uranus();
+  const neptune = new Neptune();
 
   const sol = new Sol();
   sol.addPlanet(mercury);
   sol.addPlanet(venus);
   sol.addPlanet(earth);
+  sol.addPlanet(mars);
+  sol.addPlanet(jupiter);
+  sol.addPlanet(saturn);
+  sol.addPlanet(uranus);
+  sol.addPlanet(neptune);
 
   solarSystem = new SolarSystem();
   solarSystem.scale.set(SCALE, SCALE, SCALE);
   solarSystem.addBody(sol);
   scene.add(solarSystem);
 
-  // followObject = mercury;
+  followObject = jupiter;
 
   ambientLight = new THREE.AmbientLight(0x444444);
   scene.add(ambientLight);
@@ -89,7 +123,7 @@ function update() {
   if (!followObject) {
     controls.update();
   } else {
-    camera.position.set(followObject.position.x * SCALE, followObject.position.y * SCALE, 2000);
+    camera.position.set(followObject.position.x * SCALE, followObject.position.y * SCALE, 20000);
   }
 }
 

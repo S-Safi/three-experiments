@@ -27,7 +27,7 @@ function init() {
   sun = new Star({
     radius: 1300,
     color: 0xffffff,
-    texture: '../../assets/textures/planets/download.jpg',
+    texture: '../../assets/textures/planets/phil.jpg',
   });
 
   scene.add(sun);
@@ -56,7 +56,7 @@ function update() {
     planet.update();
   });
 
-  sun.rotation.y += 0.01;
+  sun.rotation.y += 0.1;
   // sun.rotation.x += 0.1;
   // sun.rotation.z += 0.1;
 
