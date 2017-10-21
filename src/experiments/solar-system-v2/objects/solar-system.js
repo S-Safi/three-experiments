@@ -1,4 +1,3 @@
-
 export default class SolarSystem extends THREE.Object3D {
 
   constructor() {

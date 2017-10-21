@@ -51,14 +51,27 @@ function init() {
   document.body.appendChild(renderer.domElement);
 }
 
+let delta = 5;
+const distance = Math.PI / 10;
+
 function update() {
   planets.forEach((planet) => {
     planet.update();
   });
-
-  sun.rotation.y += 0.1;
-  // sun.rotation.x += 0.1;
-  // sun.rotation.z += 0.1;
+  // if (sun.rotation.y <= 0.1) {
+  //   sun.rotation.y += 0.1;
+  // }
+  // else
+  // if (sun.rotation.y <= 100) { sun.rotation.y -= 0.1; }
+  sun.rotation.z += delta;
+  if (sun.rotation.z > distance) {
+    delta = -delta;
+    sun.rotation.y += delta;
+  } else if (sun.rotation.y < -distance) {
+    delta = -delta;
+  }
+  // sun.rotation.x += 5;
+  // sun.rotation.z += 5;
 
   controls.update();
 }

@@ -4,7 +4,8 @@
   "description": "Three.js Examples",
   "scripts": {
     "dev": "gulp dev",
-    "build": "gulp build"
+    "build": "gulp build",
+    "fetchthree": "gulp fetchthree"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/kevanstannard/three#readme",
   "devDependencies": {
+    "async": "^2.5.0",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.8",
@@ -32,6 +34,9 @@
     "gulp-util": "^3.0.7",
     "json-loader": "^0.5.4",
     "lodash": "^4.17.2",
+    "mkdirp": "^0.5.1",
+    "request": "^2.81.0",
+    "require-dir": "^0.3.2",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
   }

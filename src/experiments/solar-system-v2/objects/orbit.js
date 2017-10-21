@@ -2,11 +2,8 @@ export default class Orbit extends THREE.Object3D {
 
   constructor(radius) {
     super();
-    // create orbit path
     const geometry = new THREE.CircleGeometry(radius, 1024);
-    // removes the line from the center of the circle to the edge of the circle
-    geometry.vertices.shift();
-    // geometry.rotateX(Math.PI / 2);
+    geometry.vertices.shift(); // Remove the line that goes from the center to the ring
     const material = new THREE.LineBasicMaterial({
       color: 0xffffff,
       transparent: true,
@@ -15,4 +12,5 @@ export default class Orbit extends THREE.Object3D {
     const mesh = new THREE.Line(geometry, material);
     this.add(mesh);
   }
+
 }
