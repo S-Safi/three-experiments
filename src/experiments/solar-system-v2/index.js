@@ -45,7 +45,7 @@ function init() {
   scene.add(solarSystem);
 
   // console.log(sol.children);
-  // followObject = sol.children[9];
+  // followObject = sol.children[5];
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
   scene.add(ambientLight);
@@ -81,7 +81,7 @@ function update() {
     orbitControls.update();
   } else {
     followObject.getWorldPosition(followObjectWorldPosition);
-    camera.position.set(followObjectWorldPosition.x, followObjectWorldPosition.y, 5000);
+    camera.position.set(followObjectWorldPosition.x, followObjectWorldPosition.y, 1250);
     camera.lookAt(followObjectWorldPosition);
   }
 }
