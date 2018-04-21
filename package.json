@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Three.js Examples",
   "scripts": {
-    "dev": "gulp dev",
+    "start": "gulp dev",
     "build": "gulp build",
-    "fetchthree": "gulp fetchthree"
+    "fetch-three": "node tasks/fetch-three.js"
   },
   "repository": {
     "type": "git",
