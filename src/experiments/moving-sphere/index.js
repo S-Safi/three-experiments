@@ -12,21 +12,17 @@ let camera;
 let renderer;
 let axesHelper;
 let gridHelper;
-let geometry;
-let material;
-let mesh;
 let controls;
 let pointLight;
 let ambientLight;
 
 let prevTime = Date.now();
-let r = 10;
 
 const origin = new THREE.Vector3(0, 0, 0);
 
 const bot = new Bot({
   name: 'Bot',
-  radius: r,
+  radius: 10,
   color: 0xaa33aa,
   speed: 70,
   boundary: {
@@ -34,7 +30,7 @@ const bot = new Bot({
     x2: 50,
     z1: -50,
     z2: 50,
-  }
+  },
 });
 
 function init() {
@@ -49,13 +45,6 @@ function init() {
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
   camera.position.set(200, 200, 200);
   camera.lookAt(origin);
-
-  // geometry = new THREE.SphereGeometry(r, 64, 64);
-  // material = new THREE.MeshNormalMaterial();
-  //
-  // mesh = new THREE.Mesh(geometry, material);
-  // mesh.position.set(0, r, 0);
-  // scene.add(mesh);
 
   scene.add(bot);
 
@@ -76,24 +65,26 @@ function init() {
   document.body.appendChild(renderer.domElement);
 }
 
-let angle = 0;
+// let angle = 0;
 
-function animate() {
-  // angle += 0.01  // const x = 1 / Math.sin(angle) * 20;
-  // console.log(x);
-  // mesh.position.set(x, 1 / Math.tan(angle) * 20, 1 / Math.cos(angle) * 20);
-
+function update() {
   const time = Date.now();
   const delta = time - prevTime;
   prevTime = time;
+
   bot.update(delta);
-
   controls.update();
+}
 
+function render() {
   renderer.render(scene, camera);
-  requestAnimationFrame(animate);
+}
 
+function tick() {
+  update();
+  render();
+  requestAnimationFrame(tick);
 }
 
 init();
-animate();
+tick();
