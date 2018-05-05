@@ -1,5 +1,5 @@
 export default {
-  title: 'Moving Cubes',
+  title: 'Moving Sphere',
   description: 'SELF EXPLANATORY',
   tags: 'Cube',
   public: true,
