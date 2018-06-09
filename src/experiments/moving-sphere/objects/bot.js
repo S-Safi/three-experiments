@@ -17,7 +17,6 @@ export default class Bot extends THREE.Object3D {
     this.name = name;
     this.radius = radius;
     this.move = move;
-
   }
 
   update(delta) {
