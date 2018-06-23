@@ -1,6 +1,7 @@
 import Bot from './objects/bot';
 import PerimeterMove from './move/perimeter';
 import CircleMove from './move/circle-target';
+import Stationary from './move/stationary';
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -22,95 +23,66 @@ let prevTime = Date.now();
 
 const origin = new THREE.Vector3(0, 0, 0);
 
-// const botCount = 51;
 const bots = [];
 
 const bot1 = new Bot({
   name: 'Bot 1',
   radius: 10,
   color: '#0000ff',
-  move: new PerimeterMove({
-    speed: 20,
-    boundary: [
-      new THREE.Vector3(-50, 0, -50),
-      new THREE.Vector3(50, 0, -50),
-      new THREE.Vector3(50, 0, 50),
-      new THREE.Vector3(-50, 0, 50),
-    ],
-  }),
 });
 bots.push(bot1);
 
 const bot2 = new Bot({
   name: 'Bot 2',
-  radius: 20,
-  color: '#0000ff',
-  move: new PerimeterMove({
-    speed: 40,
-    boundary: [
-      new THREE.Vector3(-100, 0, -100),
-      new THREE.Vector3(100, 0, -100),
-      new THREE.Vector3(100, 0, 100),
-      new THREE.Vector3(-100, 0, 100),
-    ],
-  }),
+  radius: 10,
+  color: '#ff0000',
 });
 bots.push(bot2);
 
 const bot3 = new Bot({
   name: 'Bot 3',
-  radius: 5,
+  radius: 10,
   color: '#ff0000',
-  move: new CircleMove({
-    speed: Math.PI / 2,
-    radius: 20,
-    target: bot1,
-  }),
 });
 bots.push(bot3);
 
+const bot4 = new Bot({
+  name: 'Bot 4',
+  radius: 10,
+  color: '#ff00ff',
+});
+bots.push(bot4);
 
-// const minSize = 5;
-// const maxSize = 30;
-// const intervalCount = botCount - 1;
-// const interval = (maxSize - minSize) / intervalCount;
+const circleMove1 = new CircleMove({
+  speed: Math.PI,
+  radius: 30,
+  target: bot1,
+});
 
+const circleMove2 = new CircleMove({
+  speed: Math.PI / 2,
+  radius: 60,
+  target: bot3,
+});
 
-// for (let i = 0; i < botCount; i += 1) {
-//   const speed = maxSize - (interval * i);
-//   const radius = maxSize - (interval * i);
-//
-//   const boundary1 = [
-//     new THREE.Vector3(-50, radius, -50),
-//     new THREE.Vector3(50, radius, -50),
-//     new THREE.Vector3(50, radius, 50),
-//     new THREE.Vector3(-50, radius, 50),
-//   ];
-//
-//   const boundary2 = [
-//     new THREE.Vector3(-100, radius, -100),
-//     new THREE.Vector3(100, radius, -100),
-//     new THREE.Vector3(100, radius, 100),
-//     new THREE.Vector3(-100, radius, 100),
-//     new THREE.Vector3(-100, 100, 100),
-//     new THREE.Vector3(-100, 100, -100),
-//   ];
-//
-//   const boundary = (i % 2 === 0) ? boundary1 : boundary2;
-//   const move = new PerimeterMove({ speed, boundary });
-//
-//   const red = Math.round(Math.random() * 255);
-//   const green = Math.round(Math.random() * 255);
-//   const blue = Math.round(Math.random() * 255);
-//   const color = (red * 256 ** 0) + (green * 256 ** 1) + (blue * 256 ** 2);
-//   const bot = new Bot({
-//     name: 'Bot',
-//     radius: maxSize - (interval * i),
-//     color,
-//     move,
-//   });
-//   bots.push(bot);
-// }
+const circleMove3 = new CircleMove({
+  speed: Math.PI / 4,
+  radius: 90,
+  target: bot2,
+});
+
+const nomove1 = new Stationary({
+  point: new THREE.Vector3(0, 0, 0),
+});
+
+bot1.move = circleMove2;
+
+bot2.move = circleMove1;
+
+bot3.move = nomove1;
+bot3.position.set(0, 0, 0);
+
+bot4.move = circleMove3;
 
 function init() {
   scene = new THREE.Scene();
