@@ -25,8 +25,6 @@ const key = {
   UP: 'space',
   DOWN: 'shift',
 };
-const origin = new THREE.Vector3(0, 0, 0);
-const rotationspeed = (Math.PI / 180) * 2;
 
 function init() {
   keyboard = new KeyboardState();
@@ -42,7 +40,7 @@ function init() {
   car = new Car({
     name: 'car',
     color: 0x888888,
-    size: 1,
+    size: 50,
   });
 
   scene.add(car);
@@ -69,16 +67,11 @@ function update() {
   keyboard.update();
   // keyboard.debug();
 
-  if (keyboard.pressed(key.LEFT)) { car.rotateY(rotationspeed); }
-  if (keyboard.pressed(key.RIGHT)) { car.rotateY(-rotationspeed); }
+  if (keyboard.pressed(key.LEFT)) { car.rotateLeft(); }
+  if (keyboard.pressed(key.RIGHT)) { car.rotateRight(); }
 
-  const forwardDirection = car.getWorldDirection();
-  const backwardDirection = car.getWorldDirection().clone().negate();
-
-  if (keyboard.pressed(key.FORWARD)) { car.position.add(forwardDirection); }
-  if (keyboard.pressed(key.BACK)) { car.position.add(backwardDirection); }
-  if (keyboard.pressed(key.UP)) { car.position.y += 2; }
-  if (keyboard.pressed(key.DOWN)) { car.position.y -= 2; }
+  if (keyboard.pressed(key.FORWARD)) { car.moveForward(); }
+  if (keyboard.pressed(key.BACK)) { car.moveBackward(); }
 
 
   camera.lookAt(car.position);
