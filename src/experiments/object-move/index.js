@@ -44,7 +44,7 @@ function init() {
   car = new Car({
     name: 'car',
     color: 0x888888,
-    size: 50,
+    size: 200,
   });
 
   scene.add(car);
