@@ -16,10 +16,11 @@ let pointLight;
 let ambientLight;
 let keyboard;
 let car;
+let clock;
 
 const key = {
   FORWARD: 'W',
-  BACK: 'S',
+  BACKWARD: 'S',
   LEFT: 'A',
   RIGHT: 'D',
   UP: 'space',
@@ -27,6 +28,9 @@ const key = {
 };
 
 function init() {
+  clock = new THREE.Clock();
+  clock.start();
+
   keyboard = new KeyboardState();
 
   scene = new THREE.Scene();
@@ -64,14 +68,16 @@ function init() {
 }
 
 function update() {
+  const delta = clock.getDelta();
+
   keyboard.update();
   // keyboard.debug();
 
-  if (keyboard.pressed(key.LEFT)) { car.rotateLeft(); }
-  if (keyboard.pressed(key.RIGHT)) { car.rotateRight(); }
+  if (keyboard.pressed(key.LEFT)) { car.rotateLeft(delta); }
+  if (keyboard.pressed(key.RIGHT)) { car.rotateRight(delta); }
 
-  if (keyboard.pressed(key.FORWARD)) { car.moveForward(); }
-  if (keyboard.pressed(key.BACK)) { car.moveBackward(); }
+  if (keyboard.pressed(key.FORWARD)) { car.moveForward(delta); }
+  if (keyboard.pressed(key.BACKWARD)) { car.moveBackward(delta); }
 
 
   camera.lookAt(car.position);
