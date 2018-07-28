@@ -1,4 +1,5 @@
 import Car from './objects/car';
+import BotCar from './objects/botcar';
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -16,7 +17,10 @@ let pointLight;
 let ambientLight;
 let keyboard;
 let car;
+let botCars;
 let clock;
+
+const botCarCount = 3;
 
 const key = {
   FORWARD: 'W',
@@ -35,19 +39,30 @@ function init() {
 
   scene = new THREE.Scene();
 
-  gridHelper = new THREE.GridHelper(100, 10);
+  gridHelper = new THREE.GridHelper(1000, 50);
   scene.add(gridHelper);
 
   axisHelper = new THREE.AxisHelper(100);
   scene.add(axisHelper);
 
   car = new Car({
-    name: 'car',
+    name: 'player',
     color: 0x888888,
-    size: 200,
+    size: 50,
   });
 
   scene.add(car);
+
+  botCars = [];
+  for (let i = 0; i < botCarCount; i += 1) {
+    const botCar = new BotCar({
+      name: 'Bot',
+      color: 0xff8888,
+      size: 20,
+    });
+    botCars.push(botCar);
+    scene.add(botCar);
+  }
 
   ambientLight = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambientLight);
@@ -67,6 +82,16 @@ function init() {
   document.body.appendChild(renderer.domElement);
 }
 
+function updateCamera() {
+  const carDirection = car.getWorldDirection();
+  const reverseDirection = carDirection.negate();
+  const heightVector = new THREE.Vector3(0, 400, 0);
+  const cameraVector = reverseDirection.multiplyScalar(600).add(heightVector);
+  const cameraPosition = car.position.clone().add(cameraVector);
+  camera.position.copy(cameraPosition);
+  camera.lookAt(car.position);
+}
+
 function update() {
   const delta = clock.getDelta();
 
@@ -79,8 +104,9 @@ function update() {
   if (keyboard.pressed(key.FORWARD)) { car.moveForward(delta); }
   if (keyboard.pressed(key.BACKWARD)) { car.moveBackward(delta); }
 
+  updateCamera();
 
-  camera.lookAt(car.position);
+  botCars.forEach(botCar => botCar.update(delta));
 }
 
 function animate() {
