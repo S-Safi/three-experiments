@@ -54,6 +54,7 @@ function init() {
 
 function update() {
   controls.update();
+  bot.update();
 }
 
 function render() {
