@@ -58,7 +58,7 @@ function init() {
     const botCar = new BotCar({
       name: 'Bot',
       color: 0xff8888,
-      size: 20,
+      size: (i + 1) * 20,
     });
     botCars.push(botCar);
     scene.add(botCar);
