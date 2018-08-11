@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -226,7 +226,7 @@
 	  var e6x = Math.sin(angle + Math.PI / 2 + Math.PI) * 300;
 	  var e6y = Math.cos(angle + Math.PI / 2 + Math.PI) * 300;
 
-	  angle += 0.01;
+	  angle += 10;
 	  // angle += 0.01;
 	  // proton.position.set(0, 0, 0);
 	  //
@@ -264,14 +264,14 @@
 	init();
 	tick();
 
-/***/ },
+/***/ }),
 /* 1 */,
 /* 2 */,
 /* 3 */,
 /* 4 */,
 /* 5 */,
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -301,9 +301,9 @@
 
 	exports.default = Electron;
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -333,9 +333,9 @@
 
 	exports.default = Proton;
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -365,9 +365,9 @@
 
 	exports.default = Neutron;
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -403,5 +403,5 @@
 
 	exports.default = Shell;
 
-/***/ }
+/***/ })
 /******/ ]);

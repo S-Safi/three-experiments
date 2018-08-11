@@ -50,51 +50,91 @@
 	var SCREEN_HEIGHT = window.innerHeight;
 	var VIEW_ANGLE = 45;
 	var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
-	var NEAR = 1;
-	var FAR = 10000;
+	var NEAR = 0.1;
+	var FAR = 20000;
+	var size = 100;
 
+	var controls = void 0;
+	var renderer = void 0;
 	var scene = void 0;
 	var camera = void 0;
-	var renderer = void 0;
-	var axisHelper = void 0;
-	var gridHelper = void 0;
-	var geometry = void 0;
-	var material = void 0;
-	var mesh = void 0;
-	var controls = void 0;
-	var pointLight = void 0;
-	var ambientLight = void 0;
 
 	var origin = new THREE.Vector3(0, 0, 0);
+
+	function renderGridHelper() {
+	  var gridHelper = new THREE.GridHelper(size, 10);
+	  scene.add(gridHelper);
+	}
+
+	function renderAxisHelper() {
+	  var axisHelper = new THREE.AxisHelper(size);
+	  scene.add(axisHelper);
+	}
+
+	function renderArrowHelper(v) {
+	  var arrowDir = v.normalize();
+	  var arrowLength = size;
+	  var arrowColor = 0x0000ff;
+	  var headLength = 10;
+	  var headWidth = 10;
+	  var arrowHelper = new THREE.ArrowHelper(arrowDir, origin, arrowLength, arrowColor, headLength, headWidth);
+
+	  scene.add(arrowHelper);
+	}
+
+	function renderVectors(vectors) {
+	  var previousVector = origin;
+	  for (var i = 0; i < vectors.length; i += 1) {
+	    var vector = vectors[i];
+	    var vectorNormal = vector.clone().normalize();
+	    var arrow = new THREE.ArrowHelper(vectorNormal, previousVector, vector.length());
+	    scene.add(arrow);
+	    previousVector = previousVector.add(vector);
+	  }
+	}
+
+	function randomNumberInRange(min, max) {
+	  var scale = max - min;
+	  var offset = min;
+	  return Math.random() * scale + offset;
+	}
+
+	function randomNumber() {
+	  return randomNumberInRange(-10, 10);
+	}
+
+	function randomVector() {
+	  return new THREE.Vector3(randomNumber(), randomNumber(), randomNumber());
+	}
 
 	function init() {
 	  scene = new THREE.Scene();
 
-	  gridHelper = new THREE.GridHelper(100, 10);
-	  scene.add(gridHelper);
+	  renderGridHelper();
+	  renderAxisHelper();
 
-	  axisHelper = new THREE.AxisHelper(100);
-	  scene.add(axisHelper);
+	  var vectors = [];
+	  var numberOfVectors = 999;
+
+	  for (var n = 1; n <= numberOfVectors; n += 1) {
+	    var vector = randomVector();
+	    vectors.push(vector);
+	  }
+
+	  renderVectors(vectors);
+	  // const v2 = new THREE.Vector3(0, 1, 0);
+	  // const v3 = v1.addScaledVector(v2, 7);
+	  // console.log(v3);
+	  //
+	  // renderArrowHelper(v3);
 
 	  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	  camera.position.set(200, 200, 200);
 	  camera.lookAt(origin);
-
-	  geometry = new THREE.BoxGeometry(50, 50, 50);
-	  material = new THREE.MeshLambertMaterial({ color: 0x888888 });
-
-	  mesh = new THREE.Mesh(geometry, material);
-	  scene.add(mesh);
-
-	  ambientLight = new THREE.AmbientLight(0x444444);
-	  scene.add(ambientLight);
-
-	  pointLight = new THREE.PointLight(0xffffff, 1, 1000);
-	  pointLight.position.set(50, 50, 50);
-	  scene.add(pointLight);
+	  scene.add(camera);
 
 	  renderer = new THREE.WebGLRenderer({ antialias: true });
-	  renderer.setSize(window.innerWidth, window.innerHeight);
+	  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	  controls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -103,24 +143,14 @@
 	  document.body.appendChild(renderer.domElement);
 	}
 
-	function update() {
-	  mesh.rotation.x += 0.9;
-	  mesh.rotation.y += 0.9;
+	function animate() {
+	  requestAnimationFrame(animate);
 	  controls.update();
-	}
-
-	function render() {
 	  renderer.render(scene, camera);
 	}
 
-	function tick() {
-	  update();
-	  render();
-	  requestAnimationFrame(tick);
-	}
-
 	init();
-	tick();
+	animate();
 
 /***/ })
 /******/ ]);

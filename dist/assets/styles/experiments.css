@@ -50,3 +50,25 @@ body {
   background-color: #222222;
   color: #888888;
 }
+
+table {
+  color: white;
+  border: 3px dimgray solid;
+  border-collapse: collapse;
+}
+
+th, td {
+  border-top: 3px dimgray solid;
+  border-left: 3px dimgray solid;
+  padding: 3px;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  width: 100%;
+}
+
+td:hover {
+  background-color: dimgray;
+}

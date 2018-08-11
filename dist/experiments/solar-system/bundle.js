@@ -40,21 +40,22 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/******/ ({
+
+/***/ 0:
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _Planet = __webpack_require__(10);
+	var _Planet = __webpack_require__(17);
 
 	var _Planet2 = _interopRequireDefault(_Planet);
 
-	var _Star = __webpack_require__(11);
+	var _Star = __webpack_require__(18);
 
 	var _Star2 = _interopRequireDefault(_Star);
 
-	var _entities = __webpack_require__(12);
+	var _entities = __webpack_require__(19);
 
 	var _entities2 = _interopRequireDefault(_entities);
 
@@ -83,9 +84,9 @@
 	  camera.position.set(0, 1000, 1200);
 
 	  sun = new _Star2.default({
-	    radius: 100,
+	    radius: 1300,
 	    color: 0xffffff,
-	    texture: '../../assets/textures/planets/sun.jpg'
+	    texture: '../../assets/textures/planets/phil.jpg'
 	  });
 
 	  scene.add(sun);
@@ -109,10 +110,27 @@
 	  document.body.appendChild(renderer.domElement);
 	}
 
+	var delta = 5;
+	var distance = Math.PI / 10;
+
 	function update() {
 	  planets.forEach(function (planet) {
 	    planet.update();
 	  });
+	  // if (sun.rotation.y <= 0.1) {
+	  //   sun.rotation.y += 0.1;
+	  // }
+	  // else
+	  // if (sun.rotation.y <= 100) { sun.rotation.y -= 0.1; }
+	  sun.rotation.z += delta;
+	  if (sun.rotation.z > distance) {
+	    delta = -delta;
+	    sun.rotation.y += delta;
+	  } else if (sun.rotation.y < -distance) {
+	    delta = -delta;
+	  }
+	  // sun.rotation.x += 5;
+	  // sun.rotation.z += 5;
 
 	  controls.update();
 	}
@@ -130,18 +148,10 @@
 	init();
 	tick();
 
-/***/ },
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */
-/***/ function(module, exports) {
+/***/ }),
+
+/***/ 17:
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -170,7 +180,7 @@
 	    _this.props = props;
 
 	    // create planet
-	    var geometry = new THREE.SphereBufferGeometry(props.radius, 16, 16);
+	    var geometry = new THREE.SphereBufferGeometry(props.radius, props.radius, props.radius);
 	    var material = new THREE.MeshStandardMaterial({ color: props.color });
 	    var mesh = new THREE.Mesh(geometry, material);
 	    _this.add(mesh);
@@ -214,9 +224,10 @@
 
 	exports.default = Planet;
 
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
+/***/ }),
+
+/***/ 18:
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -246,7 +257,7 @@
 
 	    _this.planets = [];
 
-	    var geometry = new THREE.SphereBufferGeometry(props.radius, 32, 32);
+	    var geometry = new THREE.SphereBufferGeometry(props.radius, props.radius, props.radius);
 	    var material = new THREE.MeshStandardMaterial({ color: props.color });
 	    var mesh = new THREE.Mesh(geometry, material);
 	    _this.add(mesh);
@@ -286,9 +297,10 @@
 
 	exports.default = Star;
 
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
+/***/ }),
+
+/***/ 19:
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -351,5 +363,6 @@
 
 	exports.default = planets;
 
-/***/ }
-/******/ ]);
+/***/ })
+
+/******/ });

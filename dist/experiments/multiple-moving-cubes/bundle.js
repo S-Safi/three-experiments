@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -56,8 +56,6 @@
 	var scene = void 0;
 	var camera = void 0;
 	var renderer = void 0;
-	var axisHelper = void 0;
-	var gridHelper = void 0;
 	var geometry = void 0;
 	var geometry2 = void 0;
 	var geometry3 = void 0;
@@ -79,24 +77,18 @@
 	function init() {
 	  scene = new THREE.Scene();
 
-	  gridHelper = new THREE.GridHelper(100, 10);
-	  scene.add(gridHelper);
-
-	  axisHelper = new THREE.AxisHelper(100);
-	  scene.add(axisHelper);
-
 	  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	  camera.position.set(200, 200, 200);
 	  camera.lookAt(origin);
 
-	  geometry = new THREE.BoxGeometry(25, 25, 25);
-	  geometry2 = new THREE.BoxGeometry(25, 25, 25);
-	  geometry3 = new THREE.BoxGeometry(25, 25, 25);
-	  geometry4 = new THREE.BoxGeometry(25, 25, 25);
-	  material = new THREE.MeshNormalMaterial();
-	  material2 = new THREE.MeshNormalMaterial();
-	  material3 = new THREE.MeshNormalMaterial();
-	  material4 = new THREE.MeshNormalMaterial();
+	  geometry = new THREE.SphereBufferGeometry(12, 64, 64);
+	  geometry2 = new THREE.SphereBufferGeometry(12, 64, 64);
+	  geometry3 = new THREE.SphereBufferGeometry(12, 64, 64);
+	  geometry4 = new THREE.SphereBufferGeometry(12, 64, 64);
+	  material = new THREE.MeshStandardMaterial(0xffffff);
+	  material2 = new THREE.MeshStandardMaterial(0xffffff);
+	  material3 = new THREE.MeshStandardMaterial(0xffffff);
+	  material4 = new THREE.MeshStandardMaterial(0xffffff);
 
 	  mesh = new THREE.Mesh(geometry, material);
 	  scene.add(mesh);
@@ -110,10 +102,10 @@
 	  mesh4 = new THREE.Mesh(geometry4, material4);
 	  scene.add(mesh4);
 
-	  ambientLight = new THREE.AmbientLight(0x444444);
+	  ambientLight = new THREE.AmbientLight(0xffffff);
 	  scene.add(ambientLight);
 
-	  pointLight = new THREE.PointLight(0x0000ff, 1, 1000);
+	  pointLight = new THREE.PointLight(0xffffff, 1, 1000);
 	  pointLight.position.set(100, 100, 100);
 	  scene.add(pointLight);
 
@@ -130,21 +122,18 @@
 	var angle = 0;
 
 	function update() {
-	  angle += 0.01;
-	  var y = Math.sin(angle) * 20;
-	  mesh.position.set(y, y, y);
+	  var y = Math.sin(angle) * 25;
+	  var y2 = Math.cos(angle) * 69;
+	  var y3 = Math.tan(angle) * 24;
+	  var y4 = Math.cos(angle) * 90;
+	  angle += 0.05;
+	  mesh.position.set(y, y2, y3);
 
-	  angle += 0.01;
-	  var y2 = Math.sin(angle) * 10;
-	  mesh2.position.set(-y2, y2, y2);
+	  mesh2.position.set(-y3, -y2, -y);
 
-	  angle += 0.01;
-	  var y3 = Math.sin(angle) * 30;
-	  mesh3.position.set(y3, y3, -y3);
+	  mesh3.position.set(-y3, -y4, y);
 
-	  angle += 0.01;
-	  var y4 = Math.sin(angle) * 40;
-	  mesh4.position.set(-y4, y3, -y2);
+	  mesh4.position.set(y2, y3, y4);
 
 	  controls.update();
 	}
@@ -162,5 +151,5 @@
 	init();
 	tick();
 
-/***/ }
+/***/ })
 /******/ ]);

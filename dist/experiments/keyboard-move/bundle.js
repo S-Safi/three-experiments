@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -58,14 +58,19 @@
 	var renderer = void 0;
 	var axisHelper = void 0;
 	var gridHelper = void 0;
-	var geometry = void 0;
-	var material = void 0;
-	var mesh = void 0;
-	// let controls;
 	var pointLight = void 0;
 	var ambientLight = void 0;
 	var keyboard = void 0;
+	var mesh = void 0;
 
+	var key = {
+	  FORWARD: 'W',
+	  BACK: 'S',
+	  LEFT: 'A',
+	  RIGHT: 'D',
+	  UP: 'space',
+	  DOWN: 'shift'
+	};
 	var origin = new THREE.Vector3(0, 0, 0);
 
 	function init() {
@@ -79,45 +84,65 @@
 	  axisHelper = new THREE.AxisHelper(100);
 	  scene.add(axisHelper);
 
-	  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-	  camera.position.set(200, 200, 200);
-	  camera.lookAt(origin);
-
-	  geometry = new THREE.BoxGeometry(50, 50, 50);
-	  material = new THREE.MeshLambertMaterial({ color: 0x888888 });
-
+	  var geometry = new THREE.BoxGeometry(50, 50, 50);
+	  var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
 	  mesh = new THREE.Mesh(geometry, material);
 	  scene.add(mesh);
 
-	  ambientLight = new THREE.AmbientLight(0x444444);
+	  ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 	  scene.add(ambientLight);
 
 	  pointLight = new THREE.PointLight(0xffffff, 1, 1000);
 	  pointLight.position.set(50, 50, 50);
 	  scene.add(pointLight);
 
-	  renderer = new THREE.WebGLRenderer();
-	  renderer.setSize(window.innerWidth, window.innerHeight);
+	  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+	  camera.position.set(0, 200, 200);
 
-	  //  controls = new THREE.OrbitControls(camera, renderer.domElement);
+	  renderer = new THREE.WebGLRenderer({ antialias: true });
+	  renderer.setSize(window.innerWidth, window.innerHeight);
 
 	  THREEx.WindowResize(renderer, camera);
 
 	  document.body.appendChild(renderer.domElement);
 	}
 
+	function update() {
+	  keyboard.update();
+	  // keyboard.debug();
+
+	  if (keyboard.pressed(key.LEFT)) {
+	    mesh.position.x -= 2;
+	  }
+	  if (keyboard.pressed(key.RIGHT)) {
+	    mesh.position.x += 2;
+	  }
+	  if (keyboard.pressed(key.FORWARD)) {
+	    mesh.position.z -= 2;
+	  }
+	  if (keyboard.pressed(key.BACK)) {
+	    mesh.position.z += 2;
+	  }
+	  if (keyboard.pressed(key.UP)) {
+	    mesh.position.y += 2;
+	  }
+	  if (keyboard.pressed(key.DOWN)) {
+	    mesh.position.y -= 2;
+	  }
+
+	  var campos = mesh.position.clone().add(new THREE.Vector3(0, 100, -200));
+	  // camera.position.set(0, 200, 200);
+	  camera.lookAt(mesh.position);
+	}
+
 	function animate() {
 	  requestAnimationFrame(animate);
-
-	  // controls.update();
-	  keyboard.update();
-	  console.log(keyboard.pressed('W'));
-
+	  update();
 	  renderer.render(scene, camera);
 	}
 
 	init();
 	animate();
 
-/***/ }
+/***/ })
 /******/ ]);
