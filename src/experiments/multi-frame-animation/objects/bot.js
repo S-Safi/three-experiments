@@ -73,13 +73,17 @@ const botBone = {
 };
 
 
+const ANIMATION_WALKING = 'WALKING';
+
+const limbRotationDistance = Math.PI / 6;
+
 export default class Bot extends THREE.Object3D {
   constructor() {
     super();
-
     this.bones = {};
-
     this.addBone(this, botBone);
+    this.currentAnimation = ANIMATION_WALKING;
+    this.timeElapsed = 0;
   }
 
   addBone(parent, bone) {
@@ -118,7 +122,30 @@ export default class Bot extends THREE.Object3D {
     bone.children.forEach(child => this.addBone(pivot, child));
   }
 
-  update() {
-    this.bones.head.rotation.y += 0.01;
+  update(delta) {
+    this.timeElapsed += delta;
+    switch (this.currentAnimation) {
+      case ANIMATION_WALKING: {
+        const radians = this.timeElapsed * Math.PI * 2;
+        const position = Math.cos(radians);
+        const rotation = position * limbRotationDistance;
+        this.bones.rightLeg.rotation.x = -rotation;
+        this.bones.leftLeg.rotation.x = rotation;
+        this.bones.rightArm.rotation.x = rotation;
+        this.bones.leftArm.rotation.x = -rotation;
+        this.bones.rightArm.rotation.z = rotation;
+        this.bones.leftArm.rotation.z = rotation;
+        this.bones.head.rotation.y = rotation;
+        this.bones.head.rotation.x = rotation;
+        this.bones.body.rotation.x = -rotation;
+        this.bones.body.rotation.y = -rotation;
+        this.bones.body.rotation.z = rotation;
+        break;
+      }
+      default: {
+        // nothing
+      }
+    }
+    // this.bones.head.rotation.y += 0.01;
   }
 }

@@ -16,10 +16,14 @@ let bot;
 let controls;
 let pointLight;
 let ambientLight;
+let clock;
 
 const origin = new THREE.Vector3(0, 0, 0);
 
 function init() {
+  clock = new THREE.Clock();
+  clock.start();
+
   scene = new THREE.Scene();
 
   gridHelper = new THREE.GridHelper(100, 10);
@@ -53,8 +57,9 @@ function init() {
 }
 
 function update() {
+  const delta = clock.getDelta();
   controls.update();
-  bot.update();
+  bot.update(delta);
 }
 
 function render() {
