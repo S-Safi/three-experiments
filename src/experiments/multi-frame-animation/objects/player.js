@@ -74,16 +74,30 @@ const botBone = {
 
 
 const ANIMATION_WALKING = 'WALKING';
+const ANIMATION_STANDING = 'STANDING';
+const ANIMATION_RUNNING = 'RUNNING';
 
 const limbRotationDistance = Math.PI / 6;
+const cyclesPerSecond = 1;
 
-export default class Bot extends THREE.Object3D {
+export default class Player extends THREE.Object3D {
   constructor() {
     super();
     this.bones = {};
     this.addBone(this, botBone);
-    this.currentAnimation = ANIMATION_WALKING;
     this.timeElapsed = 0;
+    this.stand();
+
+    setInterval(
+      () => {
+        if (this.isWalking()) {
+          this.run();
+        } else {
+          this.walk();
+        }
+      },
+      3000,
+    );
   }
 
   addBone(parent, bone) {
@@ -122,24 +136,57 @@ export default class Bot extends THREE.Object3D {
     bone.children.forEach(child => this.addBone(pivot, child));
   }
 
+  walk() {
+    this.currentAnimation = ANIMATION_WALKING;
+  }
+
+  isWalking() {
+    return this.currentAnimation === ANIMATION_WALKING;
+  }
+
+  run() {
+    this.currentAnimation = ANIMATION_RUNNING;
+  }
+
+  isRunning() {
+    return this.currentAnimation === ANIMATION_RUNNING;
+  }
+
+  stand() {
+    this.currentAnimation = ANIMATION_STANDING;
+  }
+
   update(delta) {
     this.timeElapsed += delta;
     switch (this.currentAnimation) {
       case ANIMATION_WALKING: {
-        const radians = this.timeElapsed * Math.PI * 2;
+        const radians = this.timeElapsed * Math.PI * 2 * cyclesPerSecond;
         const position = Math.cos(radians);
         const rotation = position * limbRotationDistance;
         this.bones.rightLeg.rotation.x = -rotation;
         this.bones.leftLeg.rotation.x = rotation;
         this.bones.rightArm.rotation.x = rotation;
         this.bones.leftArm.rotation.x = -rotation;
-        this.bones.rightArm.rotation.z = rotation;
-        this.bones.leftArm.rotation.z = rotation;
-        this.bones.head.rotation.y = rotation;
-        this.bones.head.rotation.x = rotation;
-        this.bones.body.rotation.x = -rotation;
-        this.bones.body.rotation.y = -rotation;
-        this.bones.body.rotation.z = rotation;
+        this.bones.head.rotation.y = rotation / 2;
+        break;
+      }
+      case ANIMATION_STANDING: {
+        this.bones.rightLeg.rotation.x = 0;
+        this.bones.leftLeg.rotation.x = 0;
+        this.bones.rightArm.rotation.x = 0;
+        this.bones.leftArm.rotation.x = 0;
+        this.bones.head.rotation.y = 0;
+        break;
+      }
+      case ANIMATION_RUNNING: {
+        const radians = this.timeElapsed * Math.PI * 2 * cyclesPerSecond * 2;
+        const position = Math.cos(radians);
+        const rotation = position * limbRotationDistance * 2;
+        this.bones.rightLeg.rotation.x = -rotation;
+        this.bones.leftLeg.rotation.x = rotation;
+        this.bones.rightArm.rotation.x = rotation;
+        this.bones.leftArm.rotation.x = -rotation;
+        this.bones.head.rotation.y = rotation / 4;
         break;
       }
       default: {

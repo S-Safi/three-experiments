@@ -1,4 +1,4 @@
-import Bot from './objects/bot';
+import Player from './objects/player';
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -12,7 +12,7 @@ let camera;
 let renderer;
 let axesHelper;
 let gridHelper;
-let bot;
+let player;
 let controls;
 let pointLight;
 let ambientLight;
@@ -36,8 +36,8 @@ function init() {
   camera.position.set(200, 200, 200);
   camera.lookAt(origin);
 
-  bot = new Bot();
-  scene.add(bot);
+  player = new Player();
+  scene.add(player);
 
   ambientLight = new THREE.AmbientLight(0x444444);
   scene.add(ambientLight);
@@ -59,7 +59,7 @@ function init() {
 function update() {
   const delta = clock.getDelta();
   controls.update();
-  bot.update(delta);
+  player.update(delta);
 }
 
 function render() {
