@@ -47,9 +47,9 @@
 
 	'use strict';
 
-	var _bot = __webpack_require__(14);
+	var _player = __webpack_require__(14);
 
-	var _bot2 = _interopRequireDefault(_bot);
+	var _player2 = _interopRequireDefault(_player);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -65,14 +65,18 @@
 	var renderer = void 0;
 	var axesHelper = void 0;
 	var gridHelper = void 0;
-	var bot = void 0;
+	var player = void 0;
 	var controls = void 0;
 	var pointLight = void 0;
 	var ambientLight = void 0;
+	var clock = void 0;
 
 	var origin = new THREE.Vector3(0, 0, 0);
 
 	function init() {
+	  clock = new THREE.Clock();
+	  clock.start();
+
 	  scene = new THREE.Scene();
 
 	  gridHelper = new THREE.GridHelper(100, 10);
@@ -85,8 +89,8 @@
 	  camera.position.set(200, 200, 200);
 	  camera.lookAt(origin);
 
-	  bot = new _bot2.default();
-	  scene.add(bot);
+	  player = new _player2.default();
+	  scene.add(player);
 
 	  ambientLight = new THREE.AmbientLight(0x444444);
 	  scene.add(ambientLight);
@@ -106,8 +110,9 @@
 	}
 
 	function update() {
+	  var delta = clock.getDelta();
 	  controls.update();
-	  bot.update();
+	  player.update(delta);
 	}
 
 	function render() {
@@ -128,11 +133,13 @@
 /***/ 14:
 /***/ (function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -142,96 +149,220 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Bot = function (_THREE$Object3D) {
-	    _inherits(Bot, _THREE$Object3D);
+	var botBone = {
+	  name: 'body',
+	  pivot: [0, 0, 0],
+	  boxes: [{
+	    size: [32, 64, 16],
+	    offset: [0, 0, 0]
+	  }],
+	  children: [{
+	    name: 'head',
+	    pivot: [0, 32, 0],
+	    boxes: [{
+	      name: 'head',
+	      size: [32, 32, 32],
+	      offset: [0, 16, 0]
+	    }, {
+	      name: 'eye',
+	      size: [24, 8, 4],
+	      offset: [0, 16, 16]
+	    }],
+	    children: []
+	  }, {
+	    name: 'leftArm',
+	    pivot: [24, 32, 0],
+	    boxes: [{
+	      size: [16, 64, 16],
+	      offset: [0, -32, 0]
+	    }],
+	    children: []
+	  }, {
+	    name: 'rightArm',
+	    pivot: [-24, 32, 0],
+	    boxes: [{
+	      size: [16, 64, 16],
+	      offset: [0, -32, 0]
+	    }],
+	    children: []
+	  }, {
+	    name: 'leftLeg',
+	    pivot: [8, -32, 0],
+	    boxes: [{
+	      size: [16, 64, 16],
+	      offset: [0, -32, 0]
+	    }],
+	    children: []
+	  }, {
+	    name: 'rightLeg',
+	    pivot: [-8, -32, 0],
+	    boxes: [{
+	      size: [16, 64, 16],
+	      offset: [0, -32, 0]
+	    }],
+	    children: []
+	  }]
+	};
 
-	    function Bot() {
-	        _classCallCheck(this, Bot);
+	var ANIMATION_WALKING = 'WALKING';
+	var ANIMATION_STANDING = 'STANDING';
+	var ANIMATION_RUNNING = 'RUNNING';
 
-	        var _this = _possibleConstructorReturn(this, (Bot.__proto__ || Object.getPrototypeOf(Bot)).call(this));
+	var limbRotationDistance = Math.PI / 6;
+	var cyclesPerSecond = 1;
 
-	        var bodySize = new THREE.Vector3(15, 50, 30);
-	        var headSize = new THREE.Vector3(bodySize.x, bodySize.y / 4, bodySize.z);
-	        var armSize = new THREE.Vector3(bodySize.x / 2, bodySize.y * 3 / 5, bodySize.z / 4);
-	        var legSize = new THREE.Vector3(bodySize.x * 2 / 3, bodySize.y * 7 / 10, bodySize.z / 3);
+	var Player = function (_THREE$Object3D) {
+	  _inherits(Player, _THREE$Object3D);
 
-	        var headPosition = new THREE.Vector3(0, bodySize.y / 2 + headSize.y / 2 + 1, 0);
+	  function Player() {
+	    _classCallCheck(this, Player);
 
-	        var armJoint1Position = new THREE.Vector3(0, bodySize.y / 2, bodySize.z * 2 / 3);
+	    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
-	        var armJoint2Position = new THREE.Vector3(0, bodySize.y / 2, -(bodySize.z * 2 / 3));
+	    _this.bones = {};
+	    _this.addBone(_this, botBone);
+	    _this.timeElapsed = 0;
+	    _this.stand();
 
-	        var armPosition = new THREE.Vector3(0, armSize.y / 2, 0);
+	    setInterval(function () {
+	      if (_this.isWalking()) {
+	        _this.run();
+	      } else {
+	        _this.walk();
+	      }
+	    }, 3000);
+	    return _this;
+	  }
 
-	        var legJoint1Position = new THREE.Vector3(0, -(bodySize.y / 2), bodySize.z / 4);
+	  _createClass(Player, [{
+	    key: 'addBone',
+	    value: function addBone(parent, bone) {
+	      var _this2 = this;
 
-	        var legJoint2Position = new THREE.Vector3(0, -(bodySize.y / 2), -(bodySize.z / 4));
+	      var pivot = new THREE.Object3D();
 
-	        var legPosition = new THREE.Vector3(0, -(legSize.y / 2), 0);
+	      var _bone$pivot = _slicedToArray(bone.pivot, 3),
+	          pivotX = _bone$pivot[0],
+	          pivotY = _bone$pivot[1],
+	          pivotZ = _bone$pivot[2];
 
-	        var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
-	        var armGeometry = new THREE.BoxGeometry(armSize.x, armSize.y, armSize.z);
-	        var legGeometry = new THREE.BoxGeometry(legSize.x, legSize.y, legSize.z);
+	      pivot.position.set(pivotX, pivotY, pivotZ);
 
-	        var bodyGeometry = new THREE.BoxGeometry(bodySize.x, bodySize.y, bodySize.z);
-	        _this.body = new THREE.Mesh(bodyGeometry, material);
+	      var pivotGeometry = new THREE.SphereGeometry(4, 4, 4);
+	      var pivotMaterial = new THREE.MeshLambertMaterial({
+	        color: 0xffffff
+	      });
+	      var pivotMesh = new THREE.Mesh(pivotGeometry, pivotMaterial);
 
-	        var headGeometry = new THREE.BoxGeometry(headSize.x, headSize.y, headSize.z);
-	        _this.head = new THREE.Mesh(headGeometry, material);
-	        _this.head.position.copy(headPosition);
+	      pivot.add(pivotMesh);
 
-	        _this.arm1Joint = new THREE.Object3D();
-	        _this.arm1Joint.position.copy(armJoint1Position);
+	      var boxMaterial = new THREE.MeshLambertMaterial({
+	        color: 0x888888,
+	        transparent: true,
+	        opacity: 0.8
+	      });
 
-	        _this.arm1 = new THREE.Mesh(armGeometry, material);
-	        _this.arm1.position.copy(armPosition);
-	        _this.arm1Joint.add(_this.arm1);
+	      bone.boxes.forEach(function (box) {
+	        var _box$offset = _slicedToArray(box.offset, 3),
+	            offsetX = _box$offset[0],
+	            offsetY = _box$offset[1],
+	            offsetZ = _box$offset[2];
 
-	        _this.arm2Joint = new THREE.Object3D();
-	        _this.arm2Joint.position.copy(armJoint2Position);
+	        var _box$size = _slicedToArray(box.size, 3),
+	            sizeX = _box$size[0],
+	            sizeY = _box$size[1],
+	            sizeZ = _box$size[2];
 
-	        _this.arm2 = new THREE.Mesh(armGeometry, material);
-	        _this.arm2.position.copy(armPosition);
-	        _this.arm2Joint.add(_this.arm2);
+	        var boxGeometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
+	        var boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+	        boxMesh.position.set(offsetX, offsetY, offsetZ);
+	        pivot.add(boxMesh);
+	      });
 
-	        _this.leg1Joint = new THREE.Object3D();
-	        _this.leg1Joint.position.copy(legJoint1Position);
+	      parent.add(pivot);
 
-	        _this.leg1 = new THREE.Mesh(legGeometry, material);
-	        _this.leg1.position.copy(legPosition);
-	        _this.leg1Joint.add(_this.leg1);
+	      this.bones[bone.name] = pivot;
 
-	        _this.leg2Joint = new THREE.Object3D();
-	        _this.leg2Joint.position.copy(legJoint2Position);
-
-	        _this.leg2 = new THREE.Mesh(legGeometry, material);
-	        _this.leg2.position.copy(legPosition);
-	        _this.leg2Joint.add(_this.leg2);
-
-	        _this.add(_this.body);
-	        _this.add(_this.head);
-	        _this.add(_this.arm1Joint);
-	        _this.add(_this.arm2Joint);
-	        _this.add(_this.leg1Joint);
-	        _this.add(_this.leg2Joint);
-	        return _this;
+	      bone.children.forEach(function (child) {
+	        return _this2.addBone(pivot, child);
+	      });
 	    }
+	  }, {
+	    key: 'walk',
+	    value: function walk() {
+	      this.currentAnimation = ANIMATION_WALKING;
+	    }
+	  }, {
+	    key: 'isWalking',
+	    value: function isWalking() {
+	      return this.currentAnimation === ANIMATION_WALKING;
+	    }
+	  }, {
+	    key: 'run',
+	    value: function run() {
+	      this.currentAnimation = ANIMATION_RUNNING;
+	    }
+	  }, {
+	    key: 'isRunning',
+	    value: function isRunning() {
+	      return this.currentAnimation === ANIMATION_RUNNING;
+	    }
+	  }, {
+	    key: 'stand',
+	    value: function stand() {
+	      this.currentAnimation = ANIMATION_STANDING;
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(delta) {
+	      this.timeElapsed += delta;
+	      switch (this.currentAnimation) {
+	        case ANIMATION_WALKING:
+	          {
+	            var radians = this.timeElapsed * Math.PI * 2 * cyclesPerSecond;
+	            var position = Math.cos(radians);
+	            var rotation = position * limbRotationDistance;
+	            this.bones.rightLeg.rotation.x = -rotation;
+	            this.bones.leftLeg.rotation.x = rotation;
+	            this.bones.rightArm.rotation.x = rotation;
+	            this.bones.leftArm.rotation.x = -rotation;
+	            this.bones.head.rotation.y = rotation / 2;
+	            break;
+	          }
+	        case ANIMATION_STANDING:
+	          {
+	            this.bones.rightLeg.rotation.x = 0;
+	            this.bones.leftLeg.rotation.x = 0;
+	            this.bones.rightArm.rotation.x = 0;
+	            this.bones.leftArm.rotation.x = 0;
+	            this.bones.head.rotation.y = 0;
+	            break;
+	          }
+	        case ANIMATION_RUNNING:
+	          {
+	            var _radians = this.timeElapsed * Math.PI * 2 * cyclesPerSecond * 2;
+	            var _position = Math.cos(_radians);
+	            var _rotation = _position * limbRotationDistance * 2;
+	            this.bones.rightLeg.rotation.x = -_rotation;
+	            this.bones.leftLeg.rotation.x = _rotation;
+	            this.bones.rightArm.rotation.x = _rotation;
+	            this.bones.leftArm.rotation.x = -_rotation;
+	            this.bones.head.rotation.y = _rotation / 4;
+	            break;
+	          }
+	        default:
+	          {
+	            // nothing
+	          }
+	      }
+	      // this.bones.head.rotation.y += 0.01;
+	    }
+	  }]);
 
-	    _createClass(Bot, [{
-	        key: "update",
-	        value: function update() {
-	            this.arm1Joint.rotation.z += 0.05;
-	            this.arm2Joint.rotation.z -= 0.05;
-	            this.head.rotation.y += 0.05;
-	            this.leg1Joint.rotation.z -= 0.05;
-	            this.leg2Joint.rotation.z += 0.05;
-	        }
-	    }]);
-
-	    return Bot;
+	  return Player;
 	}(THREE.Object3D);
 
-	exports.default = Bot;
+	exports.default = Player;
 
 /***/ })
 
