@@ -33,29 +33,14 @@ function init() {
   scene.add(axisHelper);
 
   const geometry = new THREE.BoxGeometry(100, 50, 1);
-  const material = new THREE.MeshLambertMaterial({ color: 0x888888 });
-  const material1 = new THREE.MeshLambertMaterial({ color: 0x888888 });
+  const texture = new THREE.TextureLoader().load('./textures/bheevik.jpg');
+  const material = new THREE.MeshBasicMaterial({ map: texture });
+  const texture1 = new THREE.TextureLoader().load('./textures/diagram.png');
+  const material1 = new THREE.MeshBasicMaterial({ map: texture1 });
+
   slides = new THREE.Mesh(geometry, material);
   const slide1 = new THREE.Mesh(geometry, material1);
   slide1.position.set(-110, 0, 0);
-
-  const loader = new THREE.TextureLoader();
-
-  loader.load(
-    './textures/bheevik.jpg',
-    (texture) => {
-      material.map = texture;
-      material.needsUpdate = true;
-    },
-  );
-
-  loader.load(
-    './textures/diagram.png',
-    (texture) => {
-      material1.map = texture;
-      material1.needsUpdate = true;
-    },
-  );
 
 
   slides.add(slide1);
