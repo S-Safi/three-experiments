@@ -33,9 +33,9 @@ function init() {
   scene.add(axisHelper);
 
   const geometry = new THREE.BoxGeometry(100, 50, 1);
-  const texture = new THREE.TextureLoader().load('./textures/bheevik.jpg');
+  const texture = new THREE.TextureLoader().load('textures/bheevik.jpg');
   const material = new THREE.MeshBasicMaterial({ map: texture });
-  const texture1 = new THREE.TextureLoader().load('./textures/diagram.png');
+  const texture1 = new THREE.TextureLoader().load('textures/diagram.png');
   const material1 = new THREE.MeshBasicMaterial({ map: texture1 });
 
   slides = new THREE.Mesh(geometry, material);
