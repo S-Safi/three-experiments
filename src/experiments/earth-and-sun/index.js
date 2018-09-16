@@ -21,7 +21,7 @@ const origin = new THREE.Vector3(0, 0, 0);
 
 function init() {
   scene = new THREE.Scene();
-// yeet
+
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
   camera.position.set(300, 300, 300);
   camera.lookAt(origin);
