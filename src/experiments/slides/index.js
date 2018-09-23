@@ -8,22 +8,22 @@ const FAR = 10000;
 let scene;
 let camera;
 let renderer;
-let axisHelper;
-let gridHelper;
-let geometry;
-let controls;
-let pointLight;
-let ambientLight;
+// let orbitControls;
 let keyboard;
 let axis;
-let animateRotation = 0;
 let animateDirection = 0;
-let material1;
-let material2;
-let material3;
-let material4;
-let nextTexture = 0;
-const SPEED = (Math.PI / 2) / 60;
+let animateRotation = 0;
+let materialFront;
+let materialRight;
+let materialBack;
+let materialLeft;
+
+const SPEED = Math.PI / 2 / 60;
+
+const PLANE_WIDTH = 180;
+const PLANE_HEIGHT = 100;
+
+const DISTANCE = 150;
 
 const key = {
   LEFT: 'A',
@@ -41,93 +41,105 @@ const slides = [
 const textureLoader = new THREE.TextureLoader();
 const textures = slides.map(slide => textureLoader.load(slide));
 
+let nextTexture = 0;
 let currentTexture = 0;
 
-function init() {
-  scene = new THREE.Scene();
+const indexAt = (index) => {
+  if (index < 0) {
+    return (textures.length - (-index % textures.length)) % textures.length;
+  }
+  return index % textures.length;
+};
 
+const textureAt = index => textures[indexAt(index)];
+
+function init() {
   keyboard = new KeyboardState();
 
-  gridHelper = new THREE.GridHelper(100, 10);
-  scene.add(gridHelper);
-
-  axisHelper = new THREE.AxisHelper(100);
-  scene.add(axisHelper);
+  scene = new THREE.Scene();
 
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-  camera.position.set(200, 200, 200);
-
-  const distance = 150;
-
-  const markerGeometry = new THREE.SphereGeometry(5);
-  const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
-  const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-  marker.position.setY(60);
-
-  axis = new THREE.Object3D();
-
-  geometry = new THREE.PlaneGeometry(100, 100);
-
-  const texture1 = textures[0];
-  material1 = new THREE.MeshBasicMaterial({ map: texture1 });
-  const plane1 = new THREE.Mesh(geometry, material1);
-  plane1.add(marker);
-  plane1.position.setZ(-distance);
-  axis.add(plane1);
-
-  const texture2 = textures[1];
-  material2 = new THREE.MeshBasicMaterial({ map: texture2 });
-  const plane2 = new THREE.Mesh(geometry, material2);
-  plane2.position.set(distance, 0, 0);
-  plane2.rotateY(-Math.PI / 2);
-  axis.add(plane2);
-
-  const texture3 = textures[2];
-  material3 = new THREE.MeshBasicMaterial({ map: texture3 });
-  const plane3 = new THREE.Mesh(geometry, material3);
-  plane3.position.set(0, 0, distance);
-  plane3.rotateY(-Math.PI);
-  axis.add(plane3);
-
-  const texture4 = textures[3];
-  material4 = new THREE.MeshBasicMaterial({ map: texture4 });
-  const plane4 = new THREE.Mesh(geometry, material4);
-  plane4.position.set(-distance, 0, 0);
-  plane4.rotateY(Math.PI / 2);
-  axis.add(plane4);
-
-  scene.add(axis);
-
-  ambientLight = new THREE.AmbientLight(0x444444);
-  scene.add(ambientLight);
-
-  pointLight = new THREE.PointLight(0xffffff, 1, 1000);
-  pointLight.position.set(50, 50, 50);
-  scene.add(pointLight);
+  camera.position.set(0, 0, 0);
+  camera.lookAt(new THREE.Vector3());
+  // camera.position.set(0, 0, DISTANCE - 10);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  // orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
 
   THREEx.WindowResize(renderer, camera);
 
   document.body.appendChild(renderer.domElement);
+
+  // const gridHelper = new THREE.GridHelper(100, 10);
+  // scene.add(gridHelper);
+
+  // const axisHelper = new THREE.AxisHelper(100);
+  // scene.add(axisHelper);
+
+  // const markerGeometry = new THREE.SphereGeometry(5);
+  // const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+  // const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+  // marker.position.setY(60);
+
+  axis = new THREE.Object3D();
+
+  const geometry = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
+
+  const textureFront = textureAt(0);
+  materialFront = new THREE.MeshBasicMaterial({ map: textureFront, side: THREE.DoubleSide });
+  const planeFront = new THREE.Mesh(geometry, materialFront);
+  // planeFront.add(marker);
+  planeFront.position.setZ(-DISTANCE);
+  axis.add(planeFront);
+
+  const textureRight = textureAt(1);
+  materialRight = new THREE.MeshBasicMaterial({ map: textureRight, side: THREE.DoubleSide });
+  const planeRight = new THREE.Mesh(geometry, materialRight);
+  planeRight.position.setX(DISTANCE);
+  planeRight.rotateY(-Math.PI / 2);
+  axis.add(planeRight);
+
+  const textureLeft = textureAt(-1);
+  materialLeft = new THREE.MeshBasicMaterial({ map: textureLeft, side: THREE.DoubleSide });
+  const planeLeft = new THREE.Mesh(geometry, materialLeft);
+  planeLeft.position.setX(-DISTANCE);
+  planeLeft.rotateY(Math.PI / 2);
+  axis.add(planeLeft);
+
+  const textureBack = null;
+  materialBack = new THREE.MeshBasicMaterial({ map: textureBack, side: THREE.DoubleSide });
+  const planeBack = new THREE.Mesh(geometry, materialBack);
+  planeBack.position.setZ(DISTANCE);
+  planeBack.rotateY(-Math.PI);
+  axis.add(planeBack);
+
+  scene.add(axis);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambientLight);
+
+  const pointLight = new THREE.PointLight(0xffffff, 1, 1000);
+  pointLight.position.set(50, 200, -100);
+  scene.add(pointLight);
 }
 
 function update() {
   keyboard.update();
 
-
   if (animateDirection === 0) {
     if (keyboard.pressed(key.LEFT)) {
-      /* axis.rotation.y -= Math.PI / 2;*/
       animateDirection = -1;
-      nextTexture = (currentTexture - 1) % textures.length;
+      nextTexture = indexAt(currentTexture - 1);
+      materialBack.map = textureAt(nextTexture - 1);
+      materialBack.needsUpdate = true;
     }
     if (keyboard.pressed(key.RIGHT)) {
       animateDirection = 1;
-      nextTexture = (currentTexture + 1) % textures.length;
+      nextTexture = indexAt(currentTexture + 1);
+      materialBack.map = textureAt(nextTexture + 1);
+      materialBack.needsUpdate = true;
     }
   } else {
     const distance = SPEED * animateDirection;
@@ -138,17 +150,25 @@ function update() {
       currentTexture = nextTexture;
       nextTexture = 0;
 
-      material1.map = textures[currentTexture];
-      material2.map = textures[(currentTexture + 1) % textures.length];
-      material3.map = textures[(currentTexture + 2) % textures.length];
-      material4.map = textures[(currentTexture - 1) % textures.length];
+      materialLeft.map = textureAt(currentTexture - 1);
+      materialLeft.needsUpdate = true;
+
+      materialFront.map = textureAt(currentTexture);
+      materialFront.needsUpdate = true;
+
+      materialRight.map = textureAt(currentTexture + 1);
+      materialRight.needsUpdate = true;
+
+      materialBack.map = null;
+      materialBack.needsUpdate = true;
+
       axis.rotation.y = 0;
     } else {
       axis.rotation.y += distance;
     }
   }
 
-  controls.update();
+  // orbitControls.update();
 }
 
 function render() {
