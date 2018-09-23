@@ -78,7 +78,7 @@
 	  RIGHT: 'D'
 	};
 
-	var slides = ['../../assets/textures/slides/bheevik.jpg', '../../assets/textures/slides/Capture.jpg', '../../assets/textures/slides/Capture1.jpg', '../../assets/textures/slides/diagram.png', '../../assets/textures/slides/scienc.jpg'];
+	var slides = ['../../assets/textures/slides/slide1.jpg', '../../assets/textures/slides/slide2.jpg', '../../assets/textures/slides/slide3.jpg', '../../assets/textures/slides/slide4.jpg', '../../assets/textures/slides/slide5.jpg', '../../assets/textures/slides/slide6.jpg', '../../assets/textures/slides/slide7.jpg', '../../assets/textures/slides/slide8.jpg', '../../assets/textures/slides/slide9.jpg', '../../assets/textures/slides/slide10.jpg', '../../assets/textures/slides/slide11.jpg', '../../assets/textures/slides/slide12.jpg', '../../assets/textures/slides/slide13.jpg'];
 
 	var textureLoader = new THREE.TextureLoader();
 	var textures = slides.map(function (slide) {
