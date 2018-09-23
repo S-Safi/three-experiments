@@ -78,7 +78,7 @@
 	  RIGHT: 'D'
 	};
 
-	var slides = ['../../assets/textures/slides/slide1.JPG', '../../assets/textures/slides/slide2.JPG', '../../assets/textures/slides/slide3.JPG', '../../assets/textures/slides/slide4.JPG', '../../assets/textures/slides/slide5.JPG', '../../assets/textures/slides/slide6.JPG', '../../assets/textures/slides/slide7.JPG', '../../assets/textures/slides/slide8.JPG', '../../assets/textures/slides/slide9.JPG', '../../assets/textures/slides/slide10.JPG', '../../assets/textures/slides/slide11.JPG', '../../assets/textures/slides/slide12.JPG', '../../assets/textures/slides/slide13.JPG'];
+	var slides = ['../../assets/textures/slides/slide1.JPG', '../../assets/textures/slides/slide2.JPG', '../../assets/textures/slides/slide3.JPG', '../../assets/textures/slides/slide4.JPG', '../../assets/textures/slides/slide5.JPG', '../../assets/textures/slides/slide6.JPG', '../../assets/textures/slides/slide7.JPG', '../../assets/textures/slides/slide8.JPG', '../../assets/textures/slides/slide9.JPG', '../../assets/textures/slides/slide10.JPG', '../../assets/textures/slides/slide11.JPG', '../../assets/textures/slides/slide12.JPG', '../../assets/textures/slides/slide13.JPG', '../../assets/textures/slides/slide14.JPG', '../../assets/textures/slides/slide15.JPG', '../../assets/textures/slides/slide16.JPG'];
 
 	var textureLoader = new THREE.TextureLoader();
 	var textures = slides.map(function (slide) {
