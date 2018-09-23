@@ -44,6 +44,9 @@ const slides = [
   '../../assets/textures/slides/slide11.JPG',
   '../../assets/textures/slides/slide12.JPG',
   '../../assets/textures/slides/slide13.JPG',
+  '../../assets/textures/slides/slide14.JPG',
+  '../../assets/textures/slides/slide15.JPG',
+  '../../assets/textures/slides/slide16.JPG',
 ];
 
 const textureLoader = new THREE.TextureLoader();
