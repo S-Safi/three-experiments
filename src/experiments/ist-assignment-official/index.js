@@ -17,6 +17,14 @@ let materialFront;
 let materialRight;
 let materialBack;
 let materialLeft;
+let bhavGeometry;
+let bhavGeometry2;
+let bhavmaterial;
+let bhavmaterial2;
+let bhavik1;
+let bhavik2;
+let bhavik3;
+let i;
 
 const SPEED = Math.PI / 2 / 60;
 
@@ -28,10 +36,12 @@ const DISTANCE = 150;
 const key = {
   LEFT: 'A',
   RIGHT: 'D',
+  YEET: 'W',
+  SAD: 'S',
 };
 
 const slides = [
-  '../../assets/textures/slides/slide1.JPG',
+  '../../assets/textures/slides/slide1f.JPG',
   '../../assets/textures/slides/slide2.JPG',
   '../../assets/textures/slides/slide3.JPG',
   '../../assets/textures/slides/slide4.JPG',
@@ -52,6 +62,9 @@ const slides = [
 
 const textureLoader = new THREE.TextureLoader();
 const textures = slides.map(slide => textureLoader.load(slide));
+
+const texture = new THREE.TextureLoader().load('../../assets/textures/slides/wallayeeti.jpg');
+const texture2 = new THREE.TextureLoader().load('../../assets/textures/slides/yeetblox.jpg');
 
 let nextTexture = 0;
 let currentTexture = 0;
@@ -77,6 +90,21 @@ function init() {
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+  bhavGeometry = new THREE.BoxGeometry(40, 40, 2);
+  bhavGeometry2 = new THREE.BoxGeometry(100, 40, 2);
+  bhavmaterial = new THREE.MeshBasicMaterial({ map: texture });
+  bhavmaterial2 = new THREE.MeshBasicMaterial({ map: texture2 });
+
+  bhavik1 = new THREE.Mesh(bhavGeometry, bhavmaterial);
+  scene.add(bhavik1);
+
+  bhavik2 = new THREE.Mesh(bhavGeometry, bhavmaterial);
+  scene.add(bhavik2);
+
+  bhavik3 = new THREE.Mesh(bhavGeometry2, bhavmaterial2);
+  scene.add(bhavik3);
+  bhavik3.position.set(0, 0, -DISTANCE - 1);
 
   // orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -137,8 +165,24 @@ function init() {
   scene.add(pointLight);
 }
 
+let angle = 0;
+
 function update() {
   keyboard.update();
+
+  if (keyboard.pressed(key.YEET)) {
+    for (i = 0; i < 1000;) {
+      bhavik3.position.z += 0.01;
+      i += 1;
+    }
+  }
+
+  if (keyboard.pressed(key.SAD)) {
+    for (i = 0; i < 1000;) {
+      bhavik3.position.z -= 0.01;
+      i += 1;
+    }
+  }
 
   if (animateDirection === 0) {
     if (keyboard.pressed(key.LEFT)) {
@@ -179,6 +223,11 @@ function update() {
       axis.rotation.y += distance;
     }
   }
+
+  angle += 0.01;
+  const y = Math.sin(angle) * 40;
+  bhavik1.position.set(110, y, -DISTANCE);
+  bhavik2.position.set(-110, -y, -DISTANCE);
 
   // orbitControls.update();
 }

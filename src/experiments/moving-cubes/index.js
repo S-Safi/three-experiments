@@ -58,12 +58,11 @@ function init() {
 let angle = 0;
 
 function animate() {
-  angle += 0.01
+  angle += 0.01;
   requestAnimationFrame(animate);
   const y = Math.sin(angle) * 20;
   // console.log(y);
   mesh.position.set(0, y, 0);
-
 
 
   controls.update();
