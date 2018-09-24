@@ -65,6 +65,14 @@
 	var materialRight = void 0;
 	var materialBack = void 0;
 	var materialLeft = void 0;
+	var bhavGeometry = void 0;
+	var bhavGeometry2 = void 0;
+	var bhavmaterial = void 0;
+	var bhavmaterial2 = void 0;
+	var bhavik1 = void 0;
+	var bhavik2 = void 0;
+	var bhavik3 = void 0;
+	var i = void 0;
 
 	var SPEED = Math.PI / 2 / 60;
 
@@ -75,15 +83,20 @@
 
 	var key = {
 	  LEFT: 'A',
-	  RIGHT: 'D'
+	  RIGHT: 'D',
+	  YEET: 'W',
+	  SAD: 'S'
 	};
 
-	var slides = ['../../assets/textures/slides/slide1.JPG', '../../assets/textures/slides/slide2.JPG', '../../assets/textures/slides/slide3.JPG', '../../assets/textures/slides/slide4.JPG', '../../assets/textures/slides/slide5.JPG', '../../assets/textures/slides/slide6.JPG', '../../assets/textures/slides/slide7.JPG', '../../assets/textures/slides/slide8.JPG', '../../assets/textures/slides/slide9.JPG', '../../assets/textures/slides/slide10-1.JPG', '../../assets/textures/slides/slide10-2.JPG', '../../assets/textures/slides/slide11.JPG', '../../assets/textures/slides/slide12.JPG', '../../assets/textures/slides/slide13.JPG', '../../assets/textures/slides/slide14.JPG', '../../assets/textures/slides/slide15.JPG', '../../assets/textures/slides/slide16.JPG'];
+	var slides = ['../../assets/textures/slides/slide1f.JPG', '../../assets/textures/slides/slide2.JPG', '../../assets/textures/slides/slide3.JPG', '../../assets/textures/slides/slide4.JPG', '../../assets/textures/slides/slide5.JPG', '../../assets/textures/slides/slide6.JPG', '../../assets/textures/slides/slide7.JPG', '../../assets/textures/slides/slide8.JPG', '../../assets/textures/slides/slide9.JPG', '../../assets/textures/slides/slide10-1.JPG', '../../assets/textures/slides/slide10-2.JPG', '../../assets/textures/slides/slide11.JPG', '../../assets/textures/slides/slide12.JPG', '../../assets/textures/slides/slide13.JPG', '../../assets/textures/slides/slide14.JPG', '../../assets/textures/slides/slide15.JPG', '../../assets/textures/slides/slide16.JPG'];
 
 	var textureLoader = new THREE.TextureLoader();
 	var textures = slides.map(function (slide) {
 	  return textureLoader.load(slide);
 	});
+
+	var texture = new THREE.TextureLoader().load('../../assets/textures/slides/wallayeeti.jpg');
+	var texture2 = new THREE.TextureLoader().load('../../assets/textures/slides/yeetblox.jpg');
 
 	var nextTexture = 0;
 	var currentTexture = 0;
@@ -111,6 +124,21 @@
 
 	  renderer = new THREE.WebGLRenderer({ antialias: true });
 	  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	  bhavGeometry = new THREE.BoxGeometry(40, 40, 2);
+	  bhavGeometry2 = new THREE.BoxGeometry(100, 40, 2);
+	  bhavmaterial = new THREE.MeshBasicMaterial({ map: texture });
+	  bhavmaterial2 = new THREE.MeshBasicMaterial({ map: texture2 });
+
+	  bhavik1 = new THREE.Mesh(bhavGeometry, bhavmaterial);
+	  scene.add(bhavik1);
+
+	  bhavik2 = new THREE.Mesh(bhavGeometry, bhavmaterial);
+	  scene.add(bhavik2);
+
+	  bhavik3 = new THREE.Mesh(bhavGeometry2, bhavmaterial2);
+	  scene.add(bhavik3);
+	  bhavik3.position.set(0, 0, -DISTANCE - 1);
 
 	  // orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -171,8 +199,24 @@
 	  scene.add(pointLight);
 	}
 
+	var angle = 0;
+
 	function update() {
 	  keyboard.update();
+
+	  if (keyboard.pressed(key.YEET)) {
+	    for (i = 0; i < 1000;) {
+	      bhavik3.position.z += 0.01;
+	      i += 1;
+	    }
+	  }
+
+	  if (keyboard.pressed(key.SAD)) {
+	    for (i = 0; i < 1000;) {
+	      bhavik3.position.z -= 0.01;
+	      i += 1;
+	    }
+	  }
 
 	  if (animateDirection === 0) {
 	    if (keyboard.pressed(key.LEFT)) {
@@ -213,6 +257,11 @@
 	      axis.rotation.y += distance;
 	    }
 	  }
+
+	  angle += 0.01;
+	  var y = Math.sin(angle) * 40;
+	  bhavik1.position.set(110, y, -DISTANCE);
+	  bhavik2.position.set(-110, -y, -DISTANCE);
 
 	  // orbitControls.update();
 	}
