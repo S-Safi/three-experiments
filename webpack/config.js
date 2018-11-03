@@ -10,12 +10,22 @@ function transformIndexExperiment(experiment, config) {
   const styles = config.styles || [];
   return (content) => {
     const template = _.template(content);
-    return template({
-      ...config,
-      experiment,
-      scripts,
-      styles,
-    });
+    // return template({
+    //   ...config,
+    //   experiment,
+    //   scripts,
+    //   styles,
+    // });
+    const templateConfig = Object.assign(
+      {},
+      config,
+      {
+        experiment,
+        scripts,
+        styles,
+      },
+    );
+    return template(templateConfig);
   };
 }
 
@@ -75,31 +85,31 @@ export default function (experiments, buildType) {
   ]));
 
   return {
+    mode: 'development',
     entry,
     plugins,
-    debug: false,
     output: {
       path: rootDir,
       filename: 'dist/experiments/[name]/bundle.js',
     },
     resolve: {
-      root: [
-        path.resolve('./src'),
+      modules: [
+        'src',
       ],
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.js$/,
           exclude: /(node_modules)/,
-          loader: 'babel',
-          query: {
-            presets: ['es2015', 'stage-0'],
-          },
+          loader: 'babel-loader',
+          // query: {
+          //   presets: ['es2015', 'stage-0'],
+          // },
         },
         {
           test: /\.json$/,
-          loader: 'json',
+          // loader: 'json',
         },
       ],
     },
